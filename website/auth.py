@@ -31,6 +31,7 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    logout_user()
     return redirect(url_for('auth.login'))
 
 
@@ -52,7 +53,7 @@ def sign_up():
         elif len(first_name) < 2:
             flash('First name must be at least 2 characters.', category='error')
         elif len(password1) < 7:
-            flash('Password} must be at least 7 characters.', category='error')
+            flash('Password must be at least 7 characters.', category='error')
         elif password1 != password2:
             flash('Passwords do not match.', category='error')
         else:
@@ -60,7 +61,7 @@ def sign_up():
             db.session.add(new_user)
             db.session.commit()
 
-            login_user(user, remember=True)
+            login_user(new_user, remember=True)
 
             flash('Account created.', category='success')
             return redirect(url_for('views.home'))
