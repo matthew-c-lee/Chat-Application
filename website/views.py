@@ -37,16 +37,10 @@ def delete_note():
 
 @views.route('/search', methods=['GET', 'POST'])
 @login_required
-def search():
-    # if request.method == 'POST': #if button is pressed
-    #     note = request.form.get('note')
-
-    #     if len(note) < 1:
-    #         flash('Note is too short', category='error')
-    #     else:
-    #         new_note = Note(data=note, user_id=current_user.id)
-    #         db.session.add(new_note)
-    #         db.session.commit()
-    #         flash('Note added.', category='success')
-            
+def search():     
     return render_template("search.html", user=current_user)
+
+@views.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():     
+    return render_template("settings.html", user=current_user)
