@@ -19,13 +19,12 @@
         <div align="right">
             <button type="submit" class="btn btn-primary">Send</button>
         </div>
-    </form>
-    {% for note in user.notes %}
+        <!-- {% for user in user_db %}
         <div>
-        {{request.form.get('username')}}            
+        {{ user.first_name}} {{ user.username }}
         </div>
-    {% endfor %}
-
+        {% endfor %} -->
+    </form>
 
     {% endblock %}
     
