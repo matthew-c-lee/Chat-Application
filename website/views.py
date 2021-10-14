@@ -44,3 +44,8 @@ def search():
 @login_required
 def settings():     
     return render_template("settings.html", user=current_user)
+
+@views.route('/chat', methods=['GET', 'POST'])
+@login_required
+def chat():     
+    return render_template("chat.html", user=current_user)
