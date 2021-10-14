@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block title %}Search Users{% endblock %} {% block content
+    %}
+    <form method="POST">
+      <h2 align="center">Search Users</h2>
+      <br />
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          placeholder="Enter Username"
+        />
+      </div>
+
+      <br />
+    
+        <div align="center">
+            <button type="sumbit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    {% endblock %}
+    
