@@ -24,11 +24,12 @@
         </div> -->
         {% if user_db %}
         {% for user in user_db %}
-        <div align="left">
+        <!-- <div align="left"> -->
+        <li class="list-group-item">
             <button type="button" class="btn btn-link btn-sm">{{user.username}}</button>
             <button type="button" class="btn btn-secondary btn-sm">Add</button>
-        </div>
-        <br />
+        </li>
+          <!-- </div> -->
         {% endfor %}
         {% endif %}
 
