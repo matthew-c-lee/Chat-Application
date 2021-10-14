@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import Note
 from . import db
 import json
+from .models import User
 
 views = Blueprint('views', __name__)
 
@@ -59,4 +60,4 @@ def chat():
             db.session.commit()
             flash('Note added.', category='success')
             
-    return render_template("chat.html", user=current_user)
+    return render_template("chat.html", user=current_user, username=current_user.username)
