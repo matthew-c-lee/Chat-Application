@@ -3,26 +3,32 @@
     <form method="POST">
       <h2 align="center">Search Users</h2>
       <br />
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control"
-          id="search"
-          name="search"
-          placeholder="Search by Username"
-        />
-      </div>
-
+          <div style="float: left; width: 65%; padding-left: 30%;" class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="search"
+              name="search"
+              placeholder="Search by Username"
+            />
+          </div>
+          <div style="float: right; width: 35%; padding-left: 2%"><button type="submit" class="btn btn-primary">Search</button></div>
       <br />
+      <br />
+      <br />
+
+
     
-        <div align="center">
-            <button type="sumbit" class="btn btn-primary">Search</button>
-        </div>
+        <!-- <div align="center">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div> -->
         {% if user_db %}
         {% for user in user_db %}
-        <div>
-          {{ user.first_name}} {{ user.username }}
+        <div align="left">
+            <button type="button" class="btn btn-link btn-sm">{{user.username}}</button>
+            <button type="button" class="btn btn-secondary btn-sm">Add</button>
         </div>
+        <br />
         {% endfor %}
         {% endif %}
 

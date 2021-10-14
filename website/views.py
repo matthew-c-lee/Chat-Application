@@ -40,7 +40,7 @@ def delete_note():
 @login_required
 def search():
     user_db = None
-    if request.form.get('search'):     
+    if request.form.get('search'):
         search = request.form.get('search')
     # flash(search, category='success')
 
