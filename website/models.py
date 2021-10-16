@@ -21,5 +21,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
+    selected_friend_id = db.Column(db.Integer)
     notes = db.relationship('Note')
     # messages = db.relationship('Message')

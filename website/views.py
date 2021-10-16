@@ -8,21 +8,37 @@ from .models import User
 views = Blueprint('views', __name__)
 
 
-@views.route('/', methods=['GET', 'POST'])
-@login_required
-def home():
-    if request.method == 'POST': #if button is pressed
-        note = request.form.get('note')
+# @views.route('/', methods=['GET', 'POST'])
+# @login_required
+# def home():
+#     if request.method == 'POST': #if button is pressed
+#         note = request.form.get('note')
 
-        if len(note) < 1:
-            flash('Note is too short', category='error')
-        else:
-            new_note = Note(data=note, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added.', category='success')
+#         if len(note) < 1:
+#             flash('Note is too short', category='error')
+#         else:
+#             new_note = Note(data=note, user_id=current_user.id)
+#             db.session.add(new_note)
+#             db.session.commit()
+#             flash('Note added.', category='success')
             
-    return render_template("home.html", user=current_user)
+#     return render_template("home.html", user=current_user)
+
+@views.route('/select-friend', methods=['POST'])
+def select_friend():
+    # flash("test", category='success')
+    user = json.loads(request.data)
+    id = user['id']
+    user = User.query.get(id)
+    if user:
+        flash("You are now chatting with " + user.username, category='success')
+        current_user.selected_friend = user        
+
+        # if user.id == current_user.id:
+        #     db.session.delete(note)
+        #     db.session.commit()
+
+    return jsonify({})
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
@@ -57,7 +73,7 @@ def settings():
         
     return render_template("settings.html", user=current_user)
 
-@views.route('/chat', methods=['GET', 'POST'])
+@views.route('/', methods=['GET', 'POST'])
 @login_required
 def chat():
     if request.method == 'POST': #if button is pressed
@@ -79,7 +95,8 @@ def chat():
     # user1 = User.query.filter_by(username='Equivocus').first().username
     # user1 = User.query.filter_by(username='Equivocus').first().username
     user_db = User.query.all()
-    
-
-            
+    # selected_friend = 
+    # flash(current_user.username, category='success')
+    # current_user.username = "BananaMan"
+    # if current_user:
     return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db)
