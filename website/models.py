@@ -10,6 +10,7 @@ from sqlalchemy.sql import func
 #     to_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
 
 
+
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
