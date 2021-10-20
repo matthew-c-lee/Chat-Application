@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 #     to_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
 
 
-class Note(db.Model):
+class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
@@ -22,5 +22,5 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     selected_friend_id = db.Column(db.Integer)
-    notes = db.relationship('Note')
+    messages = db.relationship('Message')
     # messages = db.relationship('Message')
