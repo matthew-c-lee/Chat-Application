@@ -7,10 +7,10 @@ function selectFriend(id) {
     })
 }
 
-function deleteNote(noteId) {
-    fetch('/delete-note', {
+function deleteMessage(messageId) {
+    fetch('/delete-message', {
         method: 'POST',
-        body: JSON.stringify({noteId: noteId})
+        body: JSON.stringify({messageId: messageId})
     }).then((_res) => {
         window.location.href = "/";
     })
