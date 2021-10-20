@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Message
 from . import db
 import json
 from .models import User
@@ -12,15 +12,15 @@ views = Blueprint('views', __name__)
 # @login_required
 # def home():
 #     if request.method == 'POST': #if button is pressed
-#         note = request.form.get('note')
+#         message = request.form.get('message')
 
-#         if len(note) < 1:
-#             flash('Note is too short', category='error')
+#         if len(message) < 1:
+#             flash('Message is too short', category='error')
 #         else:
-#             new_note = Note(data=note, user_id=current_user.id)
-#             db.session.add(new_note)
+#             new_message = Message(data=message, user_id=current_user.id)
+#             db.session.add(new_message)
 #             db.session.commit()
-#             flash('Note added.', category='success')
+#             flash('Message added.', category='success')
             
 #     return render_template("home.html", user=current_user)
 
@@ -35,19 +35,19 @@ def select_friend():
         current_user.selected_friend = user        
 
         # if user.id == current_user.id:
-        #     db.session.delete(note)
+        #     db.session.delete(message)
         #     db.session.commit()
 
     return jsonify({})
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    note = json.loads(request.data)
-    noteId = note['noteId']
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
+@views.route('/delete-message', methods=['POST'])
+def delete_message():
+    message = json.loads(request.data)
+    messageId = message['messageId']
+    message = Message.query.get(messageId)
+    if message:
+        if message.user_id == current_user.id:
+            db.session.delete(message)
             db.session.commit()
 
     return jsonify({})
@@ -77,13 +77,13 @@ def settings():
 @login_required
 def chat():
     if request.method == 'POST': #if button is pressed
-        note = request.form.get('note')
+        message = request.form.get('message')
 
-        if len(note) < 1:
+        if len(message) < 1:
             flash('Message is too short.', category='error')
         else:
-            new_note = Note(data=note, user_id=current_user.id)
-            db.session.add(new_note)
+            new_message = Message(data=message, user_id=current_user.id)
+            db.session.add(new_message)
             db.session.commit()
             flash('Message sent.', category='success')
     # flash(User.query.filter_by(username='Equivocus').all())
