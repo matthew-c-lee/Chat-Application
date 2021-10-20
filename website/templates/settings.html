@@ -1,0 +1,63 @@
+{% extends "base.html" %} {% block title %}Settings{% endblock %} {% block content
+    %}
+
+
+    <form method="POST">
+      <h2 align="center">Settings</h2>
+
+    </form>
+
+    <li class="list-group-item">
+      <h6 align="center">Category Name</h6>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">Toggle1</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">Toggle2</label>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <h6 align="center">Category Name</h6>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">Toggle3</label>
+      </div>
+      <div><button type="button" class="btn btn-link btn-sm">Edit Profile</button></div>
+      <div><button type="button" class="btn btn-link btn-sm">View Profile</button></div>
+
+    </li>
+
+    <li class="list-group-item">
+      <h6 align="center">Cosmetic</h6>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Message Color
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">White</a>
+          <a class="dropdown-item" href="#">Blue</a>
+          <a class="dropdown-item" href="#">Green</a>
+          <a class="dropdown-item" href="#">Orange</a>
+          <a class="dropdown-item" href="#">Teal</a>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Text Size
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Small</a>
+          <a class="dropdown-item" href="#">Medium</a>
+          <a class="dropdown-item" href="#">Large</a>
+        </div>
+      </div>
+    </li>
+
+    {% endblock %}
+    

@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}Chat{% endblock %} {% block content
+    %}
+    <h2 align="center">Chat</h2>
+<!-- Chat Box -->
+<div style="float: right; width: 55%; padding-right: 2%; padding-top: 3%;">
+    <ul class="list-group list-group-flush" id="messages">
+    <!-- {% if selected_friend: %} -->
+        <li class="list-group-item">test</li>
+    <!-- {% endif %} -->
+        {% for message in user.messages %}
+        <div align="left">{{username}}</div>
+        <li class="list-group-item">{{message.data}}
+            <button type="button" class="close" onClick="deleteMessage({{message.id}})">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+    <form method="POST">
+        <textarea name="message" id="message" class="form-control"></textarea>
+        <br /> 
+        
+        <div align="right">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>
+
+    <br />
+
+<!-- Friend's List -->
+<div style="float: left; width: 30%; padding-left: 0%">
+    <li class="list-group-item"><h4 align="center">Friends List</h4></li>
+
+    {% if user_db %}
+        {% for user in user_db %}
+            <li class="list-group-item">
+                <button type="button" class="btn btn-info btn-sm" onClick="selectFriend({{user.id}})">{{user.username}}</button>
+            </li>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}
+    
