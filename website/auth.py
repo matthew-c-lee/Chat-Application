@@ -42,6 +42,7 @@ def sign_up():
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        answer = request.form.get('answer')
 
         user = User.query.filter_by(username=username).first()
      
@@ -56,6 +57,8 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         elif password1 != password2:
             flash('Passwords do not match.', category='error')
+        elif len(answer) < 1:
+            flash('Security word must be at least 1 character', category='error')
         else:
             new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
