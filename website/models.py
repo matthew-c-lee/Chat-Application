@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
+    answer = db.Column(db.String(150)) # security word
     first_name = db.Column(db.String(150))
     selected_friend_id = db.Column(db.Integer)
     messages = db.relationship('Message')
