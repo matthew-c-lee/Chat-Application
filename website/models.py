@@ -23,4 +23,5 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     selected_friend_id = db.Column(db.Integer)
     messages = db.relationship('Message')
+    status = db.Column(db.String(150))
     # messages = db.relationship('Message')
