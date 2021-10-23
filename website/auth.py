@@ -60,7 +60,7 @@ def sign_up():
         elif len(answer) < 1:
             flash('Security word must be at least 1 character', category='error')
         else:
-            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), answer=answer)
             db.session.add(new_user)
             db.session.commit()
 
@@ -70,3 +70,25 @@ def sign_up():
             return redirect(url_for('views.chat'))
 
     return render_template("sign_up.html", user=current_user)
+
+
+@auth.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        answer = request.form.get('answer')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user:
+            if user.answer ==  answer:
+                flash('Logged in successfully.', category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('views.chat'))
+            else:
+                flash('Incorrect answer.', category='error')
+        else:
+            flash('User does not exist.', category='error')
+
+
+    return render_template("forgot_password.html", user=current_user)
