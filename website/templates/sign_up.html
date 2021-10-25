@@ -46,18 +46,16 @@ content %}
     />
   </div>
 
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Choose security question
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">In what city were you born?</a>
-      <a class="dropdown-item" href="#">What is the name of your favorite pet?</a>
-      <a class="dropdown-item" href="#">What is the name of your first school?</a>
-      <a class="dropdown-item" href="#">What was the make of your first car?</a>
-      <a class="dropdown-item" href="#">What was your first job?</a>
-    </div>
-  </div>
+
+  <select class="selectpicker" title="question" type='text' name='question' id='question'>
+    <option data-hidden="true">Choose security question</option>
+    <option value="In what city were you born?">In what city were you born?</option>
+    <option value="What is the name of your favorite pet?" >What is the name of your favorite pet?</option>
+    <option value="What is the name of your first school?" >What is the name of your first school?</option>
+    <option value="What was the make of your first car?" >What was the make of your first car?</option>
+    <option value="What was your first job?" >What was your first job?</option>
+  </select>
+
 
 
   <div class="form-group">
