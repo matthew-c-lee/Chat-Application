@@ -43,6 +43,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         answer = request.form.get('answer')
+        question = request.form.get('question')
 
         user = User.query.filter_by(username=username).first()
      
@@ -60,7 +61,7 @@ def sign_up():
         elif len(answer) < 1:
             flash('Security word must be at least 1 character', category='error')
         else:
-            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), answer=answer)
+            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), answer=answer, question=question)
             db.session.add(new_user)
             db.session.commit()
 
@@ -79,6 +80,12 @@ def forgot_password():
         answer = request.form.get('answer')
 
         user = User.query.filter_by(username=username).first()
+
+
+        print(user.username)
+        print(user.first_name)
+        print(user.answer)
+        print(user.question)
 
         if user:
             if user.answer ==  answer:
