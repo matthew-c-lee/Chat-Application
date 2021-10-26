@@ -22,17 +22,23 @@
 
         {% for message in message_db %}
             {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
-            <div align="right">{{username}}</div>
-            <li align="right" class="list-group-item">{{message.data}}
-                <button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button>
-            </li>
+                <li class="list-group-item">
+                    <div style="height:30px">
+                        <div style="float: right"><h6>{{username}}</h6></div>
+                        <div style="float: left; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div>
+                    </div>
+                    <div align="right">{{message.data}}</div>
+                </li>
             {% endif %}
 
             {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
-            <div align="left">{{recipient.username}}</div>
-            <li class="list-group-item">{{message.data}}
-                <button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button>
-            </li>
+                <li class="list-group-item">
+                    <div style="height:30px">
+                        <div style="float: left"><h6>{{recipient.username}}</h6></div>
+                        <div style="float: right; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div>
+                    </div>
+                    <div align="left">{{message.data}}</div>
+                </li>
             {% endif %}
             
         {% endfor %}
