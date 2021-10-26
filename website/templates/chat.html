@@ -8,18 +8,8 @@
         <li class="list-group-item"></li>
     <!-- {% endif %} -->
         <h5>Chatting with: {{recipient.username}}</h5>
-        
-        <!-- {% for message in user.messages %}
-            {% if message.recipient_id == recipient.id %} 
-            <div align="left">{{username}}</div>
-            <li class="list-group-item">{{message.data}}
-                <button type="button" class="close" onClick="deleteMessage({{message.id}})">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </li>
-            {% endif %}
-        {% endfor %} -->
-
+    
+        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px; display: flex; flex-direction: column-reverse">
         {% for message in message_db %}
             {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
                 <li class="list-group-item">
@@ -42,6 +32,7 @@
             {% endif %}
             
         {% endfor %}
+        </div>
     </ul>
     <form method="POST">
         <textarea name="message" id="message" class="form-control"></textarea>
