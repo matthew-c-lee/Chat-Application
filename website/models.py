@@ -16,12 +16,20 @@ class Message(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
 
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
+    friend_id = db.Column(db.Integer)
+    friend_name = db.Column(db.String(10000))
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    selected_friend_id = db.Column(db.Integer)
-    messages = db.relationship('Message')
+    # selected_friend_id = db.Column(db.Integer)
     status = db.Column(db.String(150))
+    messages = db.relationship('Message')
+    friends_list = db.relationship('Friend')
     # messages = db.relationship('Message')

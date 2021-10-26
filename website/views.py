@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Message
+from .models import User, Message, Friend
 from . import db
 import json
-from .models import User
 
 views = Blueprint('views', __name__)
 
@@ -49,36 +48,14 @@ def add_friend():
     userId = user['id']
     user = User.query.get(userId)
 
+    # if the user exists
     if user:
+        new_friend = Friend(user_id=current_user.id, friend_id=user.id, friend_name=user.username)
+        db.session.add(new_friend)
+        db.session.commit()
         flash("You are now friends with " + user.username, category='success')
 #         current_user.selected_friend = user      
     return jsonify({})
-
-
-
-
-# @views.route('/select-friend', methods=['POST'])
-# def select_friend():
-#     user = json.loads(request.data)
-#     id = user['id']
-#     user = User.query.get(id)
-#     if user:
-#         flash("You are now chatting with " + user.username, category='success')
-#         current_user.selected_friend = user        
-
-#     return jsonify({})
-
-
-
-# @views.route('/friend-search', methods=['POST'])
-# def friend_search():
-#     user = json.loads(request.data)
-#     id = user['id']
-#     user = User.query.get(id)
-#     if user:
-#         flash("You are now chatting with " + user.username, category='success')
-
-#     return jsonify({})
 
 @views.route('/delete-message', methods=['POST'])
 def delete_message():

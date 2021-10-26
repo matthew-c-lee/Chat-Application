@@ -7,6 +7,7 @@
     <!-- {% if selected_friend: %} -->
         <li class="list-group-item">test</li>
     <!-- {% endif %} -->
+        
         {% for message in user.messages %}
         <div align="left">{{username}}</div>
         <li class="list-group-item">{{message.data}}
@@ -31,11 +32,10 @@
 <!-- Friend's List -->
 <div style="float: left; width: 30%; padding-left: 0%">
     <li class="list-group-item"><h4 align="center">Friends List</h4></li>
-
-    {% if user_db %}
-        {% for user in user_db %}
+    {% if user.friends_list %}
+        {% for friend in user.friends_list %}
             <li class="list-group-item">
-                <a class="btn btn-info btn-sm" id="chat" href="/chat/{{user.username}}">{{user.username}}</a>
+                <a class="btn btn-info btn-sm" id="chat" href="/chat/{{friend.friend_name}}">{{friend.friend_name}}</a>
                 <!-- <button type="button" class="btn btn-info btn-sm" onClick="selectFriend({{user.id}})" href="/profile/{{user.username}}">{{user.username}}</button> -->
             </li>
         {% endfor %}
