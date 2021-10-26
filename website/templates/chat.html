@@ -2,19 +2,39 @@
     %}
     <h2 align="center">Chat</h2>
 <!-- Chat Box -->
-<div style="float: right; width: 55%; padding-right: 2%; padding-top: 3%;">
+<div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%;">
     <ul class="list-group list-group-flush" id="messages">
     <!-- {% if selected_friend: %} -->
-        <li class="list-group-item">test</li>
+        <li class="list-group-item"></li>
     <!-- {% endif %} -->
+        <h5>Chatting with: {{recipient.username}}</h5>
         
-        {% for message in user.messages %}
-        <div align="left">{{username}}</div>
-        <li class="list-group-item">{{message.data}}
-            <button type="button" class="close" onClick="deleteMessage({{message.id}})">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </li>
+        <!-- {% for message in user.messages %}
+            {% if message.recipient_id == recipient.id %} 
+            <div align="left">{{username}}</div>
+            <li class="list-group-item">{{message.data}}
+                <button type="button" class="close" onClick="deleteMessage({{message.id}})">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </li>
+            {% endif %}
+        {% endfor %} -->
+
+        {% for message in message_db %}
+            {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
+            <div align="right">{{username}}</div>
+            <li align="right" class="list-group-item">{{message.data}}
+                <button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button>
+            </li>
+            {% endif %}
+
+            {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
+            <div align="left">{{recipient.username}}</div>
+            <li class="list-group-item">{{message.data}}
+                <button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button>
+            </li>
+            {% endif %}
+            
         {% endfor %}
     </ul>
     <form method="POST">

@@ -100,6 +100,7 @@ def settings():
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def chat():
+    recipient = None    
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
 
@@ -113,15 +114,16 @@ def chat():
 
     # Get their username
     user_db = User.query.all()
- 
-    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db)
+    message_db = Message.query.all()
 
-@views.route('/chat/<string:chatter>', methods=['GET', 'POST'])
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, recipient=recipient)
+
+@views.route('/chat/<string:recipient>', methods=['GET', 'POST'])
 @login_required
-def chat_with(chatter):
-    chatter = User.query.filter(User.username == chatter).first_or_404()
+def chat_with(recipient):
+    recipient = User.query.filter(User.username == recipient).first_or_404()
 
-    flash("You are now chatting with " + chatter.username, category='success')
+    flash("You are now chatting with " + recipient.username, category='success')
 
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
@@ -129,13 +131,14 @@ def chat_with(chatter):
         if len(message) < 1:
             flash('Message is too short.', category='error')
         else:
-            new_message = Message(data=message, user_id=current_user.id)
+            new_message = Message(data=message, user_id=current_user.id, recipient_id = recipient.id)
             db.session.add(new_message)
             db.session.commit()
             flash('Message sent.', category='success')
 
     # Get their username
     user_db = User.query.all()
+    message_db = Message.query.all()
 
  
-    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, chatter=chatter)
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, recipient=recipient)
