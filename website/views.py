@@ -4,6 +4,10 @@ from .models import User, Message, Friend
 from . import db
 import json
 
+import secrets
+import os
+
+
 views = Blueprint('views', __name__)
 
 @views.route('/profile', methods=['GET', 'POST'])
