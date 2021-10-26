@@ -30,7 +30,7 @@ function deleteMessage(messageId) {
         method: 'POST',
         body: JSON.stringify({messageId: messageId})
     }).then((_res) => {
-        window.location.href = "/";
+        window.location.href = "";
     })
 }
 
