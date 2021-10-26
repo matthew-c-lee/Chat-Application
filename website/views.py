@@ -138,3 +138,27 @@ def chat():
     user_db = User.query.all()
  
     return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db)
+
+@views.route('/chat/<string:chatter>', methods=['GET', 'POST'])
+@login_required
+def chat_with(chatter):
+    chatter = User.query.filter(User.username == chatter).first_or_404()
+
+    flash("You are now chatting with " + chatter.username, category='success')
+
+    if request.method == 'POST': #if button is pressed
+        message = request.form.get('message')
+
+        if len(message) < 1:
+            flash('Message is too short.', category='error')
+        else:
+            new_message = Message(data=message, user_id=current_user.id)
+            db.session.add(new_message)
+            db.session.commit()
+            flash('Message sent.', category='success')
+
+    # Get their username
+    user_db = User.query.all()
+
+ 
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, chatter=chatter)

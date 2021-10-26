@@ -35,7 +35,8 @@
     {% if user_db %}
         {% for user in user_db %}
             <li class="list-group-item">
-                <button type="button" class="btn btn-info btn-sm" onClick="selectFriend({{user.id}})">{{user.username}}</button>
+                <a class="btn btn-info btn-sm" id="chat" href="/chat/{{user.username}}">{{user.username}}</a>
+                <!-- <button type="button" class="btn btn-info btn-sm" onClick="selectFriend({{user.id}})" href="/profile/{{user.username}}">{{user.username}}</button> -->
             </li>
         {% endfor %}
     {% endif %}
