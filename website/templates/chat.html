@@ -9,7 +9,7 @@
     <!-- {% endif %} -->
         <h5>Chatting with: {{recipient.username}}</h5>
     
-        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px; display: flex; flex-direction: column-reverse">
+        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px">
         {% for message in message_db %}
             <!-- Your messages -->
             {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
