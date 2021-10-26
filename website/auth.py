@@ -50,10 +50,28 @@ def sign_up():
         elif len(username) < 4:  # password too short
             flash('Username must be at least 4 characters.',
                   category='error')  # tell the user
+        elif len(username) < 5:  # password too short
+            flash('Username must be at least 4 characters.', category='error')  # tell the user
+        elif len(username) > 14:  # password too long
+            flash('Username must not exceed 14 characters.', category='error') 
+        elif not(re.match(r'^\w+$', username)):
+            flash('Username cannot contain any special characters', category='error')
+        elif re.search(r"\s", username):
+            flash('Username cannot contain any spaces.', category='error')
         elif len(first_name) < 2:
             flash('First name must be at least 2 characters.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
+        elif len(password1) < 5:
+            flash('Password must be at least 5 characters.', category='error')
+        elif not(re.search('[a-zA-Z]', password1)):
+            flash('Password must contain at least one letter.', category='error')
+        elif not(any(map(str.isdigit, password1))):
+            flash('Password must contain at least one number.', category='error')
+        elif password1.isalnum():
+            flash('Password must contain at least one special character.', category='error')
+        elif re.search(r"\s", password1):
+            flash('Password must not contain any spaces.', category='error')
         elif password1 != password2:
             flash('Passwords do not match.', category='error')
         else:
