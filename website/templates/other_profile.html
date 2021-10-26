@@ -5,14 +5,15 @@
     <form method="POST">
       <h2 align="center">{{user.username}}</h2>
 
-      <li style="height: 200px" class="list-group-item">
+    </form>
+
+    <li style="height: 200px" class="list-group-item">
         <h6 align="center">Profile</h6>
         <h6 align="left">Current Status: {{user.status}}</h6>
         <div style="float: left; width: 100%">
           <!-- change status -->
-          <div style="float: left; width: 80%" class="form-group"> <input type="text" class="form-control" id="status" name="status"placeholder="Change your Status" />
-          </div>
-          <div style="float: left; padding-left: 15px"><button type="submit" class="btn btn-primary">Update</button></div>
+          <!-- <div style="float: left; width: 80%" class="form-group"> <input type="text" class="form-control" id="status" name="status"placeholder="Change your Status" /></div> -->
+          <!-- <div style="float: left; padding-left: 15px"><button type="submit" class="btn btn-primary">Update</button></div> -->
         </div>
 
 
@@ -20,9 +21,9 @@
             <div style="float: left; padding-right: 2%; width: 45px; height: 45px">
               <img style="width: 45px; height: 45px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="rounded-circle">
             </div>
-          <div style="float: left; padding-top: .6%"><button type="submit" class="btn btn-link btn-sm">Change Profile Picture</button></div>
+          <!-- <div style="float: left; padding-top: .6%"><button type="submit" class="btn btn-link btn-sm">Change Profile Picture</button></div> -->
           </div>
     </li>
-    </form>
+
     {% endblock %}
     

@@ -13,6 +13,7 @@
             />
           </div>
           <div style="float: right; width: 35%; padding-left: 2%"><button type="submit" class="btn btn-primary">Search</button></div>
+          <!-- <div style="float: right; width: 35%; padding-left: 2%"><a class="nav-item nav-link" id="search_button" href="/search/{{search}}">Search</a></div> -->
       <br />
       <br />
       <br />
@@ -26,8 +27,16 @@
         {% for user in user_db %}
         <!-- <div align="left"> -->
         <li class="list-group-item">
-            <button type="button" class="btn btn-link btn-sm">{{user.username}}</button>
-            <button type="button" class="btn btn-secondary btn-sm">Add</button>
+            <!-- <button href="/profile" type="button" class="btn btn-link btn-sm" onClick="friendSearch({{user.id}})">{{user.username}}</button> -->
+            <!-- <button type="button" class="btn btn-link btn-sm" href="/profile">{{user.username}}</button> -->
+            <div style="float: left"><a class="nav-item nav-link" id="chat" href="/profile/{{user.username}}">{{user.username}}</a></div>
+
+            {% if current_user != user %}
+            <div><button type="button" class="btn btn-secondary btn-sm" onClick="addFriend({{user.id}})">Add</button></div>
+            {% else %}
+            <div><button type="button" class="btn btn-secondary btn-sm" onClick="addFriend({{user.id}})">You</button></div>
+
+            {% endif %}
         </li>
           <!-- </div> -->
         {% endfor %}
