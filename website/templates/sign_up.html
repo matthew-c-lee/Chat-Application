@@ -46,6 +46,34 @@ content %}
     />
   </div>
 
+
+  <select class="selectpicker" title="question" type='text' name='question' id='question'>
+    <option data-hidden="true">Choose security question</option>
+    <option value="In what city were you born?">In what city were you born?</option>
+    <option value="What is the name of your favorite pet?" >What is the name of your favorite pet?</option>
+    <option value="What is the name of your first school?" >What is the name of your first school?</option>
+    <option value="What was the make of your first car?" >What was the make of your first car?</option>
+    <option value="What was your first job?" >What was your first job?</option>
+  </select>
+
+
+
+  <div class="form-group">
+    
+    <input
+      type="text"
+      class="form-control"
+      id="answer"
+      name="answer"
+      placeholder="Write your answer"
+    />
+  </div>
+
+
+  <h3 style="color:red">Warning!</h3>
+  <h5 style='color:red'>Write down your username, password, and security word. If forgotton the account will be inaccessible.</h5>
+  
+
   <br />
 
   <button type="submit" class="btn btn-primary">Submit</button>

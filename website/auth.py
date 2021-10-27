@@ -42,6 +42,8 @@ def sign_up():
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        answer = request.form.get('answer')
+        question = request.form.get('question')
 
         user = User.query.filter_by(username=username).first()
      
@@ -74,8 +76,11 @@ def sign_up():
             flash('Password must not contain any spaces.', category='error')
         elif password1 != password2:
             flash('Passwords do not match.', category='error')
+        elif len(answer) < 1:
+            flash('Security word must be at least 1 character', category='error')
         else:
             new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), answer=answer, question=question)
             db.session.add(new_user)
             db.session.commit()
 
@@ -85,3 +90,25 @@ def sign_up():
             return redirect(url_for('views.chat'))
 
     return render_template("sign_up.html", user=current_user)
+
+
+@auth.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        answer = request.form.get('answer')
+
+        user = User.query.filter_by(username=username).first()
+        
+        
+        if user and not answer:
+            return render_template("forgot_password_accept.html", user=current_user, username=user.username, question=user.question)
+        elif user and (user.answer.lower() == answer.lower()):
+            flash('Logged in successfully.', category='success')
+            login_user(user, remember=True)
+            return redirect(url_for('views.chat'))
+        else:
+            flash('The user does not exist or your security word is incorrect.', category='error')
+
+
+    return render_template("forgot_password.html", user=current_user)
