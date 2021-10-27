@@ -73,6 +73,12 @@ def settings():
         
     return render_template("settings.html", user=current_user)
 
+@views.route('/faq', methods=['GET', 'POST'])
+@login_required
+def faq():
+        
+    return render_template("faq.html", user=current_user)
+
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def chat():
