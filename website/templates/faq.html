@@ -1,0 +1,124 @@
+{% extends "base.html" %} {% block title %}Frequently Asked Questions{% endblock %} {% block content
+%}
+<style>
+    .faqheader{
+        text-align: center;
+    }
+    .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        text-align: center;
+        border: none;
+        outline: none;
+        transition: 0.4s;
+        font-size: larger;
+        font-weight: bold;
+    }
+
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .active,
+    .accordion:hover {
+        background-color: #ccc;
+    }
+
+    /* Style the accordion panel. Note: hidden by default */
+    .panel {
+        padding: 0 18px;
+        background-color: white;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+    }
+
+    .accordion:after {
+        content: '\02795';
+        /* Unicode for plus sign (+) */
+        font-size: 13px;
+        color: #777;
+        float: right;
+        margin-left: 5px;
+    }
+
+    .active:after {
+        content: "\2796";
+        /* Unicode for minus sign (-) */
+    }
+</style>
+<div class = "faqheader">
+<h2><strong>Frequently Asked Questions</strong></h2>
+<h5>Welcome to the LeeBRA Chat Application! If you have any questions about
+    using our application, please see the Frequently Asked Questions below. </h5>
+</div>
+<button class="accordion">How Do I Create an Account?</button>
+<div class="panel">
+    <p>When loading our application, you will land on the Log In page.</p>
+    <p>To create a new account, navigate to the <strong>Sign Up</strong> button.</p>
+    <p>Once you are on the Sign Up form, you will be prompted to create a username,
+        enter your preferred display name (<i>this is what other users will see you as</i>),
+        and enter/confirm your password.
+    </p>
+</div>
+
+<button class="accordion">How Do I Log In?</button>
+<div class="panel">
+    <p>The default landing page for the LeeBRA chat application is the login page.</p>
+    <p>To log in to your account, enter your username and password into the respective fields
+        and click the <strong>Log In</strong> button.
+    </p>
+</div>
+
+<button class="accordion">What If I Forgot My Password?</button>
+<div class="panel">
+    <p>You're in luck! If you have forgotten your password, simply click the <strong>Forgot Password</strong>
+    button on the Log In page and follow the prompts to recover or change your password.</p>
+</div>
+<button class="accordion">How Do I Chat with Another Person?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+<button class="accordion">Why Can't I Chat with This Person?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+<button class="accordion">How Do I Block Someone?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+<button class="accordion">How Can I Manage My Chats?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+<button class="accordion">I Can't See the Text! How Do I Make it Bigger?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+<button class="accordion">How Will I Be Alerted when I Receive a Message?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+<button class="accordion">How Are My Messages Sent Securely?</button>
+<div class="panel">
+    <p>Answer coming soon...</p>
+</div>
+
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+{% endblock %}
