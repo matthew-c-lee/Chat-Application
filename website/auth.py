@@ -84,7 +84,7 @@ def forgot_password():
         
         if user and not answer:
             return render_template("forgot_password_accept.html", user=current_user, username=user.username, question=user.question)
-        elif user and (user.answer ==  answer):
+        elif user and (user.answer.lower() == answer.lower()):
             flash('Logged in successfully.', category='success')
             login_user(user, remember=True)
             return redirect(url_for('views.chat'))
