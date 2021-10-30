@@ -7,12 +7,12 @@
     <!-- {% if selected_friend: %} -->
         <li class="list-group-item"></li>
     <!-- {% endif %} -->
-        <h5>Chatting with: {{recipient.username}}</h5>
+        <h5 align="center">Group: {{group.group_name}}</h5>
     
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px">
         {% for message in message_db %}
             <!-- Your messages -->
-            {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
+            {% if message.user_id == user.id and message.group_id == group.id %} 
                 <li class="list-group-item">
                     <div style="height:30px">
                         <div style="float: right"><h6>{{username}}</h6></div>
@@ -23,10 +23,10 @@
             {% endif %}
 
             <!-- other person's messages -->
-            {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
+            {% if message.user_id == group.id and message.group_id == user.id %} 
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: left"><h6>{{recipient.username}}</h6></div>
+                        <div style="float: left"><h6>{{group.username}}</h6></div>
                         <!-- <div style="float: right; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div> -->
                     </div>
                     <div align="left">{{message.data}}</div>

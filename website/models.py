@@ -2,13 +2,6 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
-# class Message(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     data = db.Column(db.String(10000))
-#     date = db.Column(db.DateTime(timezone=True), default=func.now())
-#     from_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
-#     to_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
-
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,15 +18,42 @@ class Friend(db.Model):
     friend_name = db.Column(db.String(10000))
 
 
+# UserGroup = db.Table('UserGroup',
+#     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+#     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
+# )
+
+user_groups = db.Table('user_groups',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.group_id'))
+)
+ 
+
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    # __tablename__ = 'user'
+    # user1_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     answer = db.Column(db.String(150)) # security word
     question = db.Column(db.String(150)) # security question
     first_name = db.Column(db.String(150))
-    # selected_friend_id = db.Column(db.Integer)
     status = db.Column(db.String(150))
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')
-    # messages = db.relationship('Message')
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+    groups = db.relationship('Group', secondary=user_groups, backref=db.backref('members', lazy='dynamic'))
+
+    # groups = db.relationship('group', secondary=UserGroup, backref=db.backref('users', lazy='dynamic'))
+
+# class Group(db.Model): 
+#     __tablename__ = 'group'
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(255))
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
+#     users = db.relationship('user', secondary=UserGroup, backref='user')
+
+class Group(db.Model):
+    group_id = db.Column(db.Integer, primary_key=True)
+    group_name = db.Column(db.String(20))

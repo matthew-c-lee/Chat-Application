@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}Create Group{% endblock %} {% block content
+    %}
+    <form method="POST">
+      <h2 align="center">Create Group</h2>
+      <br />
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              id="group-name"
+              name="group-name"
+              placeholder="Group Name"
+            />
+          </div>
+          <!-- <div style="float: right; width: 35%; padding-left: 2%"><a class="nav-item nav-link" id="search_button" href="/search/{{search}}">Search</a></div> -->
+
+      <!-- <li class="list-group-item">
+        <h6 align="center">Add</h6>
+        <div class="form-check">
+            {% if user.friends_list %}
+                {% for friend in user.friends_list %}
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">{{friend.friend_name}}</label>
+                {% endfor %}
+            {% endif %}
+      </li> -->
+      <div style="float: right;"><button type="submit" class="btn btn-primary">Create</button></div>
+
+        <!-- <div>
+            <li class="list-group-item"><h4 align="center">Friends List</h4></li>
+            {% if user.friends_list %}
+                {% for friend in user.friends_list %}
+                    <li class="list-group-item">
+                        <a class="btn btn-info btn-sm" id="chat" href="/chat/{{friend.friend_name}}">{{friend.friend_name}}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </div> -->
+        <!-- <div align="center">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div> -->
+
+    </form>
+    {% endblock %}
+    

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import User, Message, Friend
+from .models import User, Message, Friend, Group, user_groups
 from . import db
 import json
 
@@ -27,6 +27,34 @@ def profile():
             db.session.commit()   #update the database
 
     return render_template("profile.html", user=current_user)
+
+
+@views.route('/create-group', methods=['GET', 'POST'])
+def create_group():
+    if request.method == 'POST':
+        group_name = request.form.get('group-name')
+        
+        if len(group_name) > 0:
+            new_group = Group(group_name=group_name)
+            new_group.members.append(current_user)
+            db.session.add(new_group)
+            db.session.commit()
+
+        flash("Created " + group_name)
+
+        # user = User.query.filter_by(username=username).first()
+     
+        
+        # else:
+        # new_group = Group(group_name=group_name)
+        
+
+
+        #     flash('Group created.', category='success')
+        return redirect(url_for('views.chat'))
+
+    # return render_template("sign_up.html", user=current_user)
+    return render_template("create_group.html", user=current_user)
 
 
 @views.route('/profile/<string:username>', methods=['GET', 'POST'])
@@ -151,3 +179,29 @@ def chat_with(recipient):
 
  
     return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, recipient=recipient)
+
+@views.route('/group-chat/<string:group_chat>', methods=['GET', 'POST'])
+@login_required
+def group_chat(group_chat):
+    group = Group.query.filter(Group.group_name == group_chat).first_or_404()
+    flash(group)
+
+    # flash("You are now chatting with " + recipient.username, category='success')
+
+    # if request.method == 'POST': #if button is pressed
+    #     message = request.form.get('message')
+
+    #     if len(message) < 1:
+    #         flash('Message is too short.', category='error')
+    #     else:
+    #         new_message = Message(data=message, user_id=current_user.id, recipient_id = recipient.id)
+    #         db.session.add(new_message)
+    #         db.session.commit()
+    #         flash('Message sent.', category='success')
+
+    # # Get their username
+    user_db = User.query.all()
+    message_db = Message.query.all()
+
+ 
+    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)
