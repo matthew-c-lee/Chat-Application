@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from .models import User, Message, Friend, Group, user_groups
 from . import db
 import json
-
+from sqlalchemy import and_
 import secrets
 import os
 
@@ -184,24 +184,64 @@ def chat_with(recipient):
 @login_required
 def group_chat(group_chat):
     group = Group.query.filter(Group.group_name == group_chat).first_or_404()
-    flash(group)
 
-    # flash("You are now chatting with " + recipient.username, category='success')
+    if request.method == 'POST': #if button is pressed
+        message = request.form.get('message')
 
-    # if request.method == 'POST': #if button is pressed
-    #     message = request.form.get('message')
+        if len(message) < 1:
+            flash('Message is too short.', category='error')
+        else:
+            new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
+            db.session.add(new_message)
+            db.session.commit()
+            flash('Message sent.', category='success')
 
-    #     if len(message) < 1:
-    #         flash('Message is too short.', category='error')
-    #     else:
-    #         new_message = Message(data=message, user_id=current_user.id, recipient_id = recipient.id)
-    #         db.session.add(new_message)
-    #         db.session.commit()
-    #         flash('Message sent.', category='success')
+    user_db = User.query.all()
+    message_db = Message.query.all()
+           
+    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)
 
-    # # Get their username
+# page for adding members
+@views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])
+def add_members(group_chat):
+    group = Group.query.filter(Group.group_name == group_chat).first_or_404()
+
     user_db = User.query.all()
     message_db = Message.query.all()
 
+
+
  
+    return render_template("add_members.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)
+
+@views.route('/add-member/<string:group_id>/<string:member_id>', methods=['GET', 'POST'])
+def add_member(group_id, member_id):
+    group = Group.query.filter(Group.group_id == group_id).first_or_404()
+    member = User.query.filter(User.id == member_id).first_or_404()
+    
+    # this needs to be made into a method, it's reused a couple times.
+    if request.method == 'POST': #if button is pressed
+        message = request.form.get('message')
+
+        if len(message) < 1:
+            flash('Message is too short.', category='error')
+        else:
+            new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
+            db.session.add(new_message)
+            db.session.commit()
+            flash('Message sent.', category='success')
+
+    in_group_already = db.session.query(user_groups).filter((user_groups.c.user_id==member.id) & (user_groups.c.group_id==group.group_id)).first()
+
+    if member and not in_group_already:
+        group.members.append(member)
+        db.session.commit()
+
+        flash("added " + member.username + " to " + group.group_name)
+    else:
+        flash(member.username + " is already in " + group.group_name, category="error")
+
+    user_db = User.query.all()
+    message_db = Message.query.all()
+           
     return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)

@@ -9,6 +9,8 @@ class Message(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
     recipient_id = db.Column(db.Integer)
+    group_id = db.Column(db.Integer)
+
 
 
 class Friend(db.Model):

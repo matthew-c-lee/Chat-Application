@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %}Chat{% endblock %} {% block content
+    %}
+    <h2 align="center">Add members to: {{group.group_name}}</h2>
+
+
+<!-- Friend's List -->
+<div align="center">
+    <li class="list-group-item"><h4 align="center">Friends List</h4></li>
+    {% if user.friends_list %}
+        {% for friend in user.friends_list %}
+            <li class="list-group-item">
+                <div align="left" ><a class="btn btn-primary" id="create-group" href="/add-member/{{group.group_id}}/{{friend.friend_id}}">{{friend.friend_name}}</a></div>
+            </li>
+        {% endfor %}
+    {% endif %}
+
+    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/group-chat/{{group.group_name}}">Cancel</a></div>
+</div>
+
+{% endblock %}
+    

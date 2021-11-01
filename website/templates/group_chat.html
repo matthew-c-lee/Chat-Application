@@ -8,42 +8,49 @@
         <li class="list-group-item"></li>
     <!-- {% endif %} -->
         <h5 align="center">Group: {{group.group_name}}</h5>
-    
+
+        
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px">
+            
         {% for message in message_db %}
             <!-- Your messages -->
-            {% if message.user_id == user.id and message.group_id == group.id %} 
+            {% if message.group_id == group.group_id %} 
+                {% if message.user_id == user.id %}
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: right"><h6>{{username}}</h6></div>
+                        <div style="float: right"><h6>{{message.user_id}}</h6></div>
                         <div style="float: left; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div>
                     </div>
                     <div align="right">{{message.data}}</div>
                 </li>
-            {% endif %}
-
-            <!-- other person's messages -->
-            {% if message.user_id == group.id and message.group_id == user.id %} 
+                {% else %}
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: left"><h6>{{group.username}}</h6></div>
+                        <div style="float: left"><h6>{{message.user_id}}</h6></div>
                         <!-- <div style="float: right; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div> -->
                     </div>
                     <div align="left">{{message.data}}</div>
                 </li>
+                {% endif %}
             {% endif %}
-            
         {% endfor %}
         </div>
     </ul>
+
+
     <form method="POST">
         <textarea name="message" id="message" class="form-control"></textarea>
         <br /> 
+
         
-        <div align="right">
+        
+        <div style="float: right">
             <button type="submit" class="btn btn-primary">Send</button>
         </div>
     </form>
+
+    <div><a style="float: left" class="btn btn-info btn-sm" id="chat" href="/add-members/{{group.group_name}}">Add group members</a></div>
+
 </div>
 
     <br />
@@ -63,6 +70,7 @@
     {% endif %}
     
     {% if user.groups %}
+    <li class="list-group-item"><h4 align="center">Group Chats</h4></li>
         {% for group in user.groups %}
             <li class="list-group-item">
                 <a class="btn btn-info btn-sm" id="chat" href="/group-chat/{{group.group_name}}">{{group.group_name}}</a>
