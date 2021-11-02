@@ -44,7 +44,9 @@
             <button type="submit" class="btn btn-primary">Send</button>
         </div>
     </form>
-    <div><a style="float: left" class="btn btn-info btn-sm" id="chat" href="/add-members/{{group.group_name}}">Add group members</a></div>
+    <div style="float: left;"><a class="btn btn-info btn-sm" id="chat" href="/add-members/{{group.group_name}}">Add members</a></div>
+    <div style="float: left; padding-left: 10px"><a class="btn btn-info btn-sm" id="chat" href="/leave-group/{{group.group_name}}">Leave group</a></div>
+
 </div>
     
 <br />
@@ -72,7 +74,7 @@
         {% endfor %}
     {% endif %}
 
-    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">Create Group Chat</a></div>
+    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">New Group</a></div>
 </div>
 
 {% endblock %}
