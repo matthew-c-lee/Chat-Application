@@ -18,7 +18,7 @@
                 {% if message.user_id == user.id %}
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: right"><h6>{{message.user_id}}</h6></div>
+                        <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                         <div style="float: left; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div>
                     </div>
                     <div align="right">{{message.data}}</div>
@@ -26,8 +26,7 @@
                 {% else %}
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: left"><h6>{{message.user_id}}</h6></div>
-                        <!-- <div style="float: right; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div> -->
+                        <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                     </div>
                     <div align="left">{{message.data}}</div>
                 </li>
@@ -41,30 +40,25 @@
     <form method="POST">
         <textarea name="message" id="message" class="form-control"></textarea>
         <br /> 
-
-        
-        
         <div style="float: right">
             <button type="submit" class="btn btn-primary">Send</button>
         </div>
     </form>
-
     <div><a style="float: left" class="btn btn-info btn-sm" id="chat" href="/add-members/{{group.group_name}}">Add group members</a></div>
-
 </div>
-
-    <br />
+    
+<br />
 
 
 
 <!-- Friend's List -->
 <div style="float: left; width: 30%; padding-left: 0%">
-    <li class="list-group-item"><h4 align="center">Friends List</h4></li>
+    <li style="height: 70px" class="list-group-item"><h4 align="center">Friends List</h4></li>
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
             <li class="list-group-item">
-                <a class="btn btn-info btn-sm" id="chat" href="/chat/{{friend.friend_name}}">{{friend.friend_name}}</a>
-                <!-- <button type="button" class="btn btn-info btn-sm" onClick="selectFriend({{user.id}})" href="/profile/{{user.username}}">{{user.username}}</button> -->
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{friend.friend_name}}">{{friend.friend_name}}</a></div>
+                <a class="btn btn-secondary btn-sm" id="chat" href="/chat/{{friend.friend_name}}">Chat</a>
             </li>
         {% endfor %}
     {% endif %}
@@ -80,10 +74,6 @@
 
     <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">Create Group Chat</a></div>
 </div>
-
-<!-- <div style="float: left; width: 5%; padding-left: 2%">
-    <button type="submit" class="btn btn-primary">Send</button>
-</div> -->
 
 {% endblock %}
     

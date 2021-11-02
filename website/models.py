@@ -19,18 +19,11 @@ class Friend(db.Model):
     friend_id = db.Column(db.Integer)
     friend_name = db.Column(db.String(10000))
 
-
-# UserGroup = db.Table('UserGroup',
-#     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-#     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
-# )
-
 user_groups = db.Table('user_groups',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('group_id', db.Integer, db.ForeignKey('group.group_id'))
 )
  
-
 class User(db.Model, UserMixin):
     # __tablename__ = 'user'
     # user1_id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +35,7 @@ class User(db.Model, UserMixin):
     status = db.Column(db.String(150))
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')
+
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))

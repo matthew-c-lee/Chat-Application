@@ -8,8 +8,15 @@
     <li class="list-group-item"><h4 align="center">Friends List</h4></li>
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
+        <!-- checks to make sure the user isn't already in the group -->
             <li class="list-group-item">
-                <div align="left" ><a class="btn btn-primary" id="create-group" href="/add-member/{{group.group_id}}/{{friend.friend_id}}">{{friend.friend_name}}</a></div>
+                <div align="left" ><a class="btn btn-link" id="create-group" href="/add-member/{{group.group_id}}/{{friend.friend_id}}">{{friend.friend_name}}</a>
+            
+            {% if not db.session.query(user_groups).filter(and_(user_groups.c.user_id==friend.id, user_groups.c.group_id==group.group_id)).first() %}
+            <!-- <div style="float: left; padding-top: 6px" ><button type="button" class="btn btn-secondary btn-sm" onClick="addFriend({{user.id}})">Add</button></div> -->
+                <a align="left" class="btn btn-secondary btn-sm" id="create-group" href="/add-member/{{group.group_id}}/{{friend.friend_id}}">Add</a>
+            </div>
+            {% endif %}
             </li>
         {% endfor %}
     {% endif %}

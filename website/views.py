@@ -74,11 +74,11 @@ def other_profile(username):
     else:
         return render_template('other_profile.html', user=user)
 
-@views.route('/add-friend', methods=['GET', 'POST'])
-def add_friend():
-    user = json.loads(request.data)
-    userId = user['id']
-    user = User.query.get(userId)
+@views.route('/add-friend/<string:user_id>/<string:search>', methods=['GET', 'POST'])
+def add_friend(user_id, search):
+    # user = json.loads(request.data)
+    # userId = user['id']
+    user = User.query.get(user_id)
 
     # if the user exists
     if user:
@@ -87,7 +87,7 @@ def add_friend():
         db.session.commit()
         flash("You are now friends with " + user.username, category='success')
 #         current_user.selected_friend = user      
-    return jsonify({})
+    return redirect("/search/" + search)
 
 @views.route('/delete-message', methods=['POST'])
 def delete_message():
@@ -110,7 +110,7 @@ def other_search(search):
         return redirect("/search/" + search)
 
 
-    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search)
+    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_)
 
 @views.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -121,7 +121,7 @@ def search():
         search = request.form.get('search')
         return redirect("/search/" + search)
 
-    return render_template("search.html", user=current_user, current_user=current_user, user_db=user_db, search=search)
+    return render_template("search.html", user=current_user, current_user=current_user, user_db=user_db, search=search, Friend=Friend, and_=and_)
 
 @views.route('/settings', methods=['GET', 'POST'])
 @login_required
@@ -147,7 +147,7 @@ def chat():
             new_message = Message(data=message, user_id=current_user.id)
             db.session.add(new_message)
             db.session.commit()
-            flash('Message sent.', category='success')
+            # flash('Message sent.', category='success')
 
     # Get their username
     user_db = User.query.all()
@@ -171,7 +171,7 @@ def chat_with(recipient):
             new_message = Message(data=message, user_id=current_user.id, recipient_id = recipient.id)
             db.session.add(new_message)
             db.session.commit()
-            flash('Message sent.', category='success')
+            # flash('Message sent.', category='success')
 
     # Get their username
     user_db = User.query.all()
@@ -194,42 +194,23 @@ def group_chat(group_chat):
             new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
             db.session.add(new_message)
             db.session.commit()
-            flash('Message sent.', category='success')
+            # flash('Message sent.', category='success')
 
-    user_db = User.query.all()
     message_db = Message.query.all()
            
-    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)
+    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=User, message_db = message_db, group=group)
 
 # page for adding members
 @views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])
 def add_members(group_chat):
     group = Group.query.filter(Group.group_name == group_chat).first_or_404()
 
-    user_db = User.query.all()
-    message_db = Message.query.all()
-
-
-
- 
-    return render_template("add_members.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)
+    return render_template("add_members.html", user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
 
 @views.route('/add-member/<string:group_id>/<string:member_id>', methods=['GET', 'POST'])
 def add_member(group_id, member_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
     member = User.query.filter(User.id == member_id).first_or_404()
-    
-    # this needs to be made into a method, it's reused a couple times.
-    if request.method == 'POST': #if button is pressed
-        message = request.form.get('message')
-
-        if len(message) < 1:
-            flash('Message is too short.', category='error')
-        else:
-            new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
-            db.session.add(new_message)
-            db.session.commit()
-            flash('Message sent.', category='success')
 
     in_group_already = db.session.query(user_groups).filter((user_groups.c.user_id==member.id) & (user_groups.c.group_id==group.group_id)).first()
 
@@ -241,7 +222,5 @@ def add_member(group_id, member_id):
     else:
         flash(member.username + " is already in " + group.group_name, category="error")
 
-    user_db = User.query.all()
-    message_db = Message.query.all()
-           
-    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, group=group)
+    return redirect("/group-chat/" + group.group_name)
+

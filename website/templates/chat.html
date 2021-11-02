@@ -4,9 +4,7 @@
 <!-- Chat Box -->
 <div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%;">
     <ul class="list-group list-group-flush" id="messages">
-    <!-- {% if selected_friend: %} -->
-        <li class="list-group-item"></li>
-    <!-- {% endif %} -->
+
         <h5>Chatting with: {{recipient.username}}</h5>
     
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px">
@@ -27,7 +25,6 @@
                 <li class="list-group-item">
                     <div style="height:30px">
                         <div style="float: left"><h6>{{recipient.username}}</h6></div>
-                        <!-- <div style="float: right; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div> -->
                     </div>
                     <div align="left">{{message.data}}</div>
                 </li>
@@ -51,13 +48,13 @@
 
 
 <!-- Friend's List -->
-<div style="float: left; width: 30%; padding-left: 0%">
-    <li class="list-group-item"><h4 align="center">Friends List</h4></li>
+<div style="float: left; width: 250px; padding-left: 0%">
+    <li style="height: 70px" class="list-group-item"><h4 align="center">Friends List</h4></li>
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
             <li class="list-group-item">
-                <a class="btn btn-info btn-sm" id="chat" href="/chat/{{friend.friend_name}}">{{friend.friend_name}}</a>
-                <!-- <button type="button" class="btn btn-info btn-sm" onClick="selectFriend({{user.id}})" href="/profile/{{user.username}}">{{user.username}}</button> -->
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{friend.friend_name}}">{{friend.friend_name}}</a></div>
+                <a class="btn btn-secondary btn-sm" id="chat" href="/chat/{{friend.friend_name}}">Chat</a>
             </li>
         {% endfor %}
     {% endif %}
@@ -72,12 +69,10 @@
         {% endfor %}
     {% endif %}
 
-    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">Create Group Chat</a></div>
+    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">New Group Chat</a></div>
 </div>
 
-<!-- <div style="float: left; width: 5%; padding-left: 2%">
-    <button type="submit" class="btn btn-primary">Send</button>
-</div> -->
+
 
 {% endblock %}
     
