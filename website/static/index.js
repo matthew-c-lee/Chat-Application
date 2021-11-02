@@ -24,6 +24,15 @@ function addFriend(id) {
     })
 }
 
+function addMember(id, group) {
+    fetch('/add-member', {
+        method: 'POST',
+        body: JSON.stringify({id: id, group: group})
+    }).then((_res) => {
+        window.location.href = ""
+    })
+}
+
 
 function deleteMessage(messageId) {
     fetch('/delete-message', {
