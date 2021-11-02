@@ -2,9 +2,10 @@
     %}
     <h2 align="center">Chat</h2>
 <!-- Chat Box -->
+
+{% if recipient %}
 <div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%;">
     <ul class="list-group list-group-flush" id="messages">
-
         <h5>Chatting with: {{recipient.username}}</h5>
     
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px">
@@ -42,6 +43,7 @@
         </div>
     </form>
 </div>
+{% endif %}
 
     <br />
 

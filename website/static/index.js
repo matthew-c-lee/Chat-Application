@@ -15,14 +15,14 @@ function selectFriend(id) {
 //         window.location.href = "/search/" + username;
 //     })
 // }
-function addFriend(id) {
-    fetch('/add-friend', {
-        method: 'POST',
-        body: JSON.stringify({id: id})
-    }).then((_res) => {
-        window.location.href = ""
-    })
-}
+// function addFriend(id) {
+//     fetch('/add-friend', {
+//         method: 'POST',
+//         body: JSON.stringify({id: id})
+//     }).then((_res) => {
+//         window.location.href = ""
+//     })
+// }
 
 function addMember(id, group) {
     fetch('/add-member', {
