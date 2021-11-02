@@ -183,7 +183,10 @@ def chat_with(recipient):
 @views.route('/group-chat/<string:group_chat>', methods=['GET', 'POST'])
 @login_required
 def group_chat(group_chat):
+
+    # find the actual group from the name
     group = Group.query.filter(Group.group_name == group_chat).first_or_404()
+    
 
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
