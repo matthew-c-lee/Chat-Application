@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from .models import User, Message, Friend, Group, user_groups
 from . import db
 import json
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 import secrets
 import os
 
@@ -149,11 +149,12 @@ def chat():
             db.session.commit()
             # flash('Message sent.', category='success')
 
+
     # Get their username
     user_db = User.query.all()
     message_db = Message.query.all()
 
-    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, recipient=recipient)
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect)
 
 @views.route('/chat/<string:recipient>', methods=['GET', 'POST'])
 @login_required
@@ -172,13 +173,15 @@ def chat_with(recipient):
             db.session.add(new_message)
             db.session.commit()
             # flash('Message sent.', category='success')
+            return redirect('/chat/' + recipient.username)
+
 
     # Get their username
     user_db = User.query.all()
     message_db = Message.query.all()
 
  
-    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, message_db = message_db, recipient=recipient)
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect)
 
 @views.route('/group-chat/<string:group_chat>', methods=['GET', 'POST'])
 @login_required
@@ -186,7 +189,6 @@ def group_chat(group_chat):
 
     # find the actual group from the name
     group = Group.query.filter(Group.group_name == group_chat).first_or_404()
-    
 
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
@@ -198,10 +200,9 @@ def group_chat(group_chat):
             db.session.add(new_message)
             db.session.commit()
             # flash('Message sent.', category='success')
-
-    message_db = Message.query.all()
+            return redirect('/group-chat/' + group.group_name)
            
-    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=User, message_db = message_db, group=group)
+    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc)
 
 # page for adding members
 @views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])

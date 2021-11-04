@@ -8,8 +8,8 @@
     <ul class="list-group list-group-flush" id="messages">
         <h5>Chatting with: {{recipient.username}}</h5>
     
-        <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-height: 300px">
-        {% for message in message_db %}
+            <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
+            {% for message in Message.query.order_by(desc(Message.id)).all() %}
             <!-- Your messages -->
             {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
                 <li class="list-group-item">
@@ -73,8 +73,6 @@
 
     <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">New Group</a></div>
 </div>
-
-
 
 {% endblock %}
     
