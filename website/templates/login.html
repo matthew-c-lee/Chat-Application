@@ -8,12 +8,11 @@
   <link rel="stylesheet" 
   href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 </head>
-<style>
-  
-</style>
+
+<body>
 <form method="POST">
   <h2 align="center">Log In</h2>
-  <p align = "center">New here? <a href = "sign-up">Sign up now!</a></p>
+  <p align = "center">New here? <a href = "sign-up" style="text-decoration: none;">Sign up now!</a></p>
   <div class="d-grid gap-2 col-6 mx-auto">
   <div class="form-floating">
     <input
@@ -23,8 +22,8 @@
       name="username"
       placeholder="Enter Username"
     >
-    <label for="username"><i class = "bi bi-person"></i> Username</label>
-  </div><br>
+    <label for="username" style="font-size:large;"><i class = "bi bi-person"></i> Username</label>
+  </div>
 
   <div class="form-floating">
     <input
@@ -34,7 +33,7 @@
       name="password"
       placeholder="Enter Password"
     >
-    <label for="password"><i class = "bi bi-lock"></i> Password</label>
+    <label for="password" style="font-size:large;"><i class = "bi bi-lock"></i> Password</label>
     
   </div>
   </div>
@@ -42,13 +41,14 @@
   <a onClick = "showHidePassword();" href ="#" style="text-align: right; text-decoration:none;" id = "show-hide"><i class = "bi bi-eye" id="show_eye"></i><i>Show</i></a>
 </div>
 
-  <br>
+
   <div class="d-grid gap-2 col-4 mx-auto">
     <button type="sumbit" class="btn btn-primary btn-lg" style="font-weight:bold;">Log In</button>
     <a class="btn btn-outline-secondary btn-sm" id="forgotPassword" href="/forgot-password" role = "button">Forgot Password</a>
   </div>
     
 </form>
+</body>
 <script>
   function showHidePassword() {
     var x = document.getElementById("password");
