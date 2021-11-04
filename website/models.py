@@ -25,8 +25,6 @@ user_groups = db.Table('user_groups',
 )
  
 class User(db.Model, UserMixin):
-    # __tablename__ = 'user'
-    # user1_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     answer = db.Column(db.String(150)) # security word
@@ -36,19 +34,9 @@ class User(db.Model, UserMixin):
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')
 
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
     groups = db.relationship('Group', secondary=user_groups, backref=db.backref('members', lazy='dynamic'))
-
-    # groups = db.relationship('group', secondary=UserGroup, backref=db.backref('users', lazy='dynamic'))
-
-# class Group(db.Model): 
-#     __tablename__ = 'group'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(255))
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
-#     users = db.relationship('user', secondary=UserGroup, backref='user')
 
 class Group(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)

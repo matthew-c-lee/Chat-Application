@@ -227,3 +227,9 @@ def add_member(group_id, member_id):
 
     return redirect("/group-chat/" + group.group_name)
 
+@views.route('/leave-group/<string:group_chat>/<string:id>', methods=['GET', 'POST'])
+@login_required
+def leave_group(group_chat, id):
+    db.session.query(user_groups).filter(user_groups.c.user_id == id).delete()
+    db.session.commit()
+    return redirect('/')
