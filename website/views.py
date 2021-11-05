@@ -162,6 +162,7 @@ def chat_with(recipient):
     recipient = User.query.filter(User.username == recipient).first_or_404()
 
     flash("You are now chatting with " + recipient.username, category='success')
+    message = request.form.get('message')
 
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
@@ -181,7 +182,7 @@ def chat_with(recipient):
     message_db = Message.query.all()
 
  
-    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect)
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect, message=message)
 
 @views.route('/group-chat/<string:group_chat>', methods=['GET', 'POST'])
 @login_required
