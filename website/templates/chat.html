@@ -39,7 +39,8 @@
         <br /> 
         
         <div align="right">
-            <button type="submit" class="btn btn-primary">Send</button>
+            <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
+            <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();" >Send</button>
         </div>
     </form>
 </div>
