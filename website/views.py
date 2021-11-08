@@ -6,6 +6,7 @@ import json
 from sqlalchemy import and_, desc
 import secrets
 import os
+import datetime
 
 
 views = Blueprint('views', __name__)
@@ -29,32 +30,7 @@ def profile():
     return render_template("profile.html", user=current_user)
 
 
-@views.route('/create-group', methods=['GET', 'POST'])
-def create_group():
-    if request.method == 'POST':
-        group_name = request.form.get('group-name')
-        
-        if len(group_name) > 0:
-            new_group = Group(group_name=group_name)
-            new_group.members.append(current_user)
-            db.session.add(new_group)
-            db.session.commit()
 
-        flash("Created " + group_name)
-
-        # user = User.query.filter_by(username=username).first()
-     
-        
-        # else:
-        # new_group = Group(group_name=group_name)
-        
-
-
-        #     flash('Group created.', category='success')
-        return redirect(url_for('views.chat'))
-
-    # return render_template("sign_up.html", user=current_user)
-    return render_template("create_group.html", user=current_user)
 
 
 @views.route('/profile/<string:username>', methods=['GET', 'POST'])
@@ -76,8 +52,6 @@ def other_profile(username):
 
 @views.route('/add-friend/<string:user_id>/<string:search>', methods=['GET', 'POST'])
 def add_friend(user_id, search):
-    # user = json.loads(request.data)
-    # userId = user['id']
     user = User.query.get(user_id)
 
     # if the user exists
@@ -89,17 +63,16 @@ def add_friend(user_id, search):
 #         current_user.selected_friend = user      
     return redirect("/search/" + search)
 
-@views.route('/delete-message', methods=['POST'])
-def delete_message():
-    message = json.loads(request.data)
-    messageId = message['messageId']
-    message = Message.query.get(messageId)
+@views.route('/delete-message/<string:message_id>/<string:recipient_name>', methods=['GET', 'POST'])
+def delete_message(message_id, recipient_name):
+    message = Message.query.get(message_id)
+    
     if message:
         if message.user_id == current_user.id:
             db.session.delete(message)
             db.session.commit()
 
-    return jsonify({})
+    return redirect('/chat/' + recipient_name)
 
 @views.route('/search/<string:search>', methods=['GET', 'POST'])
 @login_required
@@ -147,8 +120,6 @@ def chat():
             new_message = Message(data=message, user_id=current_user.id)
             db.session.add(new_message)
             db.session.commit()
-            # flash('Message sent.', category='success')
-
 
     # Get their username
     user_db = User.query.all()
@@ -160,9 +131,6 @@ def chat():
 @login_required
 def chat_with(recipient):
     recipient = User.query.filter(User.username == recipient).first_or_404()
-
-    flash("You are now chatting with " + recipient.username, category='success')
-    message = request.form.get('message')
 
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
@@ -182,56 +150,28 @@ def chat_with(recipient):
     message_db = Message.query.all()
 
  
-    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect, message=message)
+    return render_template("chat.html", user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect, message1=None, datetime=datetime)
 
-@views.route('/group-chat/<string:group_chat>', methods=['GET', 'POST'])
-@login_required
-def group_chat(group_chat):
 
-    # find the actual group from the name
-    group = Group.query.filter(Group.group_name == group_chat).first_or_404()
 
-    if request.method == 'POST': #if button is pressed
-        message = request.form.get('message')
 
-        if len(message) < 1:
-            flash('Message is too short.', category='error')
-        else:
-            new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
-            db.session.add(new_message)
-            db.session.commit()
-            # flash('Message sent.', category='success')
-            return redirect('/group-chat/' + group.group_name)
-           
-    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc)
 
-# page for adding members
-@views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])
-def add_members(group_chat):
-    group = Group.query.filter(Group.group_name == group_chat).first_or_404()
 
-    return render_template("add_members.html", user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
 
-@views.route('/add-member/<string:group_id>/<string:member_id>', methods=['GET', 'POST'])
-def add_member(group_id, member_id):
-    group = Group.query.filter(Group.group_id == group_id).first_or_404()
-    member = User.query.filter(User.id == member_id).first_or_404()
 
-    in_group_already = db.session.query(user_groups).filter((user_groups.c.user_id==member.id) & (user_groups.c.group_id==group.group_id)).first()
 
-    if member and not in_group_already:
-        group.members.append(member)
-        db.session.commit()
+# @views.route('/index')
+# def index():
+#     members = User.query.all()
+#     return render_template('index.html', members=members)
+    
+# @views.route('/update', methods=['POST'])
+# def update():
 
-        flash("added " + member.username + " to " + group.group_name)
-    else:
-        flash(member.username + " is already in " + group.group_name, category="error")
+#     member = User.query.filter_by(id=request.form['id']).first()
+#     member.username = request.form['name']
+#     member.first_name = request.form['email']
 
-    return redirect("/group-chat/" + group.group_name)
+#     db.session.commit()
 
-@views.route('/leave-group/<string:group_chat>/<string:id>', methods=['GET', 'POST'])
-@login_required
-def leave_group(group_chat, id):
-    db.session.query(user_groups).filter(user_groups.c.user_id == id).delete()
-    db.session.commit()
-    return redirect('/')
+#     return jsonify({'result' : 'success', 'member_num' : member.id})

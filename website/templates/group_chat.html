@@ -8,29 +8,51 @@
     <!-- {% if selected_friend: %} -->
         <li class="list-group-item"></li>
     <!-- {% endif %} -->
-        <h5 align="center">Group: {{group.group_name}}</h5>
-
-        
+        <h5 align="center">{{group.group_name}}</h5>
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
         <!-- <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px"> -->
-
             
         {% for message in Message.query.order_by(desc(Message.id)).all() %}
             <!-- Your messages -->
-            {% if message.group_id == group.group_id %} 
+            {% if message.group_id == group.group_id %}
                 {% if message.user_id == user.id %}
                 <li class="list-group-item">
                     <div style="height:30px">
                         <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
-                        <div style="float: left; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div>
-                    </div>
-                    <div align="right">{{message.data}}</div>
+                        <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message-group/{{message.id}}/{{group.group_name}}"><span aria-hidden="true">&times;</span></a></div>
+                    
+                            <!-- if the message is old, show full date and time -->
+                            {% if (message.date - datetime.datetime.now()).days < 0 %}
+                            <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%b %d, %I:%M %p')}}</small></div>
+                            <!-- if it was only yesterday -->
+                            {% elif (message.date - datetime.datetime.now()).days == -1 %}
+                                <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
+                                <!-- if it was today, just show the time -->
+                            {% else %}
+                                <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                            {% endif %}
+                        </div>
+
+                        <div align="right">{{message.data}}</div>
+                
                 </li>
                 {% else %}
                 <li class="list-group-item">
                     <div style="height:30px">
                         <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
+                    
+                        <!-- if the message is old, show full date and time -->
+                        {% if (message.date - datetime.datetime.now()).days < 0 %}
+                            <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%b %d, %I:%M %p')}}</small></div>
+                            <!-- if it was only yesterday -->
+                            {% elif (message.date - datetime.datetime.now()).days == -1 %}
+                                <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
+                                <!-- if it was today, just show the time -->
+                        {% else %}
+                            <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                        {% endif %}
                     </div>
+
                     <div align="left">{{message.data}}</div>
                 </li>
                 {% endif %}
@@ -57,6 +79,7 @@
 <br />
 
 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!-- Friend's List -->
 <div style="float: left; width: 40%; padding-left: 0%">
@@ -75,6 +98,10 @@
         {% for group in user.groups %}
             <li class="list-group-item">
                 <a class="btn btn-info btn-sm" id="chat" href="/group-chat/{{group.group_name}}">{{group.group_name}}</a>
+                <div style="float: right; width: 5%"><a class="close" id="chat" href="/"><span aria-hidden="true"><i class="material-icons">mode_edit</i></span></a></div>
+                
+
+
             </li>
         {% endfor %}
     {% endif %}

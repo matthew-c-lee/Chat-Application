@@ -6,7 +6,7 @@
 {% if recipient %}
 <div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%;">
     <ul class="list-group list-group-flush" id="messages">
-        <h5>Chatting with: {{recipient.username}}</h5>
+        <h5 align="center">{{recipient.username}}</h5>
     
             <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
             {% for message in Message.query.order_by(desc(Message.id)).all() %}
@@ -15,9 +15,22 @@
                 <li class="list-group-item">
                     <div style="height:30px">
                         <div style="float: right"><h6>{{username}}</h6></div>
-                        <div style="float: left; width: 5%"><button type="button" class="close" onClick="deleteMessage({{message.id}})"><span aria-hidden="true">&times;</span></button></div>
-                    </div>
-                    <div align="right">{{message.data}}</div>
+                        <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message/{{message.id}}/{{recipient.username}}"><span aria-hidden="true">&times;</span></a></div>
+                        
+                    <!-- if the message is old, show full date and time -->
+                    {% if (message.date - datetime.datetime.now()).days < 0 %}
+                    <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%b %d, %I:%M %p')}}</small></div>
+                    <!-- if it was only yesterday -->
+                    {% elif (message.date - datetime.datetime.now()).days == -1 %}
+                        <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
+                        <!-- if it was today, just show the time -->
+                    {% else %}
+                        <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                    {% endif %}
+                </div>
+
+                <div align="right">{{message.data}}</div>
+                
                 </li>
             {% endif %}
 
@@ -26,8 +39,21 @@
                 <li class="list-group-item">
                     <div style="height:30px">
                         <div style="float: left"><h6>{{recipient.username}}</h6></div>
-                    </div>
-                    <div align="left">{{message.data}}</div>
+
+                    <!-- if the message is old, show full date and time -->
+                    {% if (message.date - datetime.datetime.now()).days < 0 %}
+                    <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%b %d, %I:%M %p')}}</small></div>
+                    <!-- if it was only yesterday -->
+                    {% elif (message.date - datetime.datetime.now()).days == -1 %}
+                        <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
+                        <!-- if it was today, just show the time -->
+                {% else %}
+                    <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                {% endif %}
+            </div>
+
+                <div align="left">{{message.data}}</div>
+                
                 </li>
             {% endif %}
             
@@ -35,7 +61,9 @@
         </div>
     </ul>
     <form method="POST">
-        <textarea name="message" id="message" class="form-control">{{message}}</textarea>
+        <!-- <textarea name="message" id="message" class="form-control">message1</textarea> -->
+        <textarea name="message" id="message" class="form-control"></textarea>
+
         
         <br /> 
         
