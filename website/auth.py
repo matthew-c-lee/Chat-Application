@@ -102,10 +102,8 @@ def forgot_password():
                   
         if user and not answer:
             return render_template("forgot_password_accept.html", user=current_user, username=user.username, question=user.question)
-        elif user and (user.answer == answer):
-            flash('Logged in successfully.', category='success')
-            login_user(user, remember=True)
-            return redirect(url_for('views.chat'))
+        elif user and (user.answer.lower() == answer.lower()):
+            return redirect(url_for('auth.password_reset', user=current_user, username=user.username))
         else:
             flash('The user does not exist or your security word is incorrect.', category='error')
 
@@ -149,3 +147,4 @@ def password_reset():
             return redirect(url_for('views.chat'))
 
     return render_template("password_reset.html", user=current_user)   
+    
