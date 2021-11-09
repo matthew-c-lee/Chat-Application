@@ -14,6 +14,7 @@
             {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
                 <li class="list-group-item">
                     <div style="height:30px">
+                        <div style="float: right; padding-left: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
                         <div style="float: right"><h6>{{username}}</h6></div>
                         <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message/{{message.id}}/{{recipient.username}}"><span aria-hidden="true">&times;</span></a></div>
                         
@@ -38,6 +39,7 @@
             {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
                 <li class="list-group-item">
                     <div style="height:30px">
+                        <div style="float: left; padding-right: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
                         <div style="float: left"><h6>{{recipient.username}}</h6></div>
 
                     <!-- if the message is old, show full date and time -->
@@ -85,8 +87,9 @@
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
             <li class="list-group-item">
-                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{friend.friend_name}}">{{friend.friend_name}}</a></div>
-                <a class="btn btn-success btn-sm" id="chat" href="/chat/{{friend.friend_name}}">Chat</a>
+                <div style="float: left"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == friend.friend_id).first_or_404().image_file) }}"></div>
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}</a></div>
+                <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/chat/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">Chat</a></div>
             </li>
         {% endfor %}
     {% endif %}
@@ -102,7 +105,7 @@
         {% endfor %}
     {% endif %}
 
-    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">New Group</a></div>
+    <div style="float: right; padding-top: 3%"><a class="btn btn-outline-primary btn-sm" id="create-group" href="/create-group">New Group</a></div>
 </div>
 
 {% endblock %}

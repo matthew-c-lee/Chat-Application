@@ -47,7 +47,7 @@ def group_chat(group_chat):
 
     # east = timezone('US/Eastern')
            
-    return render_template("group_chat.html", user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc, str=str, datetime=datetime)
+    return render_template("group_chat.html", User=User, user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc, str=str, datetime=datetime)
 
 # page for adding members
 @group_views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])

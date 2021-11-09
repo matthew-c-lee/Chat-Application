@@ -18,6 +18,7 @@
                 {% if message.user_id == user.id %}
                 <li class="list-group-item">
                     <div style="height:30px">
+                        <div style="float: right; padding-left: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
                         <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                         <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message-group/{{message.id}}/{{group.group_name}}"><span aria-hidden="true">&times;</span></a></div>
                     
@@ -39,6 +40,7 @@
                 {% else %}
                 <li class="list-group-item">
                     <div style="height:30px">
+                        <div style="float: left; padding-right: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
                         <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                     
                         <!-- if the message is old, show full date and time -->
@@ -71,8 +73,8 @@
             <!-- <a class="btn btn-primary" id="send" href="/send-chat/{{group.group_name}}/{{message}}">Send</a> -->
         </div>
     </form>
-    <div style="float: left;"><a class="btn btn-info btn-sm" id="chat" href="/add-members/{{group.group_name}}">Add members</a></div>
-    <div style="float: left; padding-left: 10px"><a class="btn btn-danger btn-sm" id="chat" href="/leave-group/{{group.group_name}}/{{current_user.id}}">Leave group</a></div>
+    <div style="float: left;"><a class="btn btn-outline-info btn-sm" id="chat" href="/add-members/{{group.group_name}}">Add members</a></div>
+    <div style="float: left; padding-left: 10px"><a class="btn btn-outline-danger btn-sm" id="chat" href="/leave-group/{{group.group_name}}/{{current_user.id}}">Leave group</a></div>
 
 </div>
     
@@ -84,8 +86,9 @@
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
             <li class="list-group-item">
-                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{friend.friend_name}}">{{friend.friend_name}}</a></div>
-                <a class="btn btn-success btn-sm" id="chat" href="/chat/{{friend.friend_name}}">Chat</a>
+                <div style="float: left"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == friend.friend_id).first_or_404().image_file) }}"></div>
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}</a></div>
+                <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/chat/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">Chat</a></div>
             </li>
         {% endfor %}
     {% endif %}
@@ -103,7 +106,7 @@
         {% endfor %}
     {% endif %}
 
-    <div style="float: right; padding-top: 3%"><a class="btn btn-primary" id="create-group" href="/create-group">New Group</a></div>
+    <div style="float: right; padding-top: 3%"><a class="btn btn-outline-primary btn-sm" id="create-group" href="/create-group">New Group</a></div>
 </div>
 
 {% endblock %}
