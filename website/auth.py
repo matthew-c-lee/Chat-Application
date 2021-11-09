@@ -121,8 +121,6 @@ def password_reset():
         
 
         user = User.query.filter_by(username=username).first()
-
-        print(username)
         
         if not user:
             flash('Write down your original username', category='error')
