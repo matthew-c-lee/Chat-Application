@@ -76,9 +76,9 @@ def group_chat(group_id):
         return render_template("group_chat.html", User=User, user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc, str=str, datetime=datetime)
 
 # page for adding members
-@group_views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])
-def add_members(group_chat):
-    group = Group.query.filter(Group.group_name == group_chat).first_or_404()
+@group_views.route('/add-members/<string:group_id>', methods=['GET', 'POST'])
+def add_members(group_id):
+    group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
     return render_template("add_members.html", user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
 
@@ -110,6 +110,10 @@ def leave_group(group_id, id):
     if (db.session.query(user_groups).filter(and_(user_groups.c.user_id != None, user_groups.c.group_id == group_id))).first() == None:
         # find the group and delete it
         db.session.query(Group).filter(Group.group_id == group_id).delete()
+
+        # delete all messages from that group
+        db.session.query(Message).filter(Message.group_id == group_id).delete()
+
         db.session.commit()
         flash('Empty group has been deleted.')
 
