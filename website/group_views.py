@@ -102,7 +102,17 @@ def add_member(group_id, member_id):
 @group_views.route('/leave-group/<string:group_id>/<string:id>', methods=['GET', 'POST'])
 @login_required
 def leave_group(group_id, id):
+    # delete the specific column that indicates them as a member of the group
+
     db.session.query(user_groups).filter(and_(user_groups.c.user_id == id, user_groups.c.group_id == group_id)).delete()
+
+    # if the group is now empty
+    if (db.session.query(user_groups).filter(and_(user_groups.c.user_id != None, user_groups.c.group_id == group_id))).first() == None:
+        # find the group and delete it
+        db.session.query(Group).filter(Group.group_id == group_id).delete()
+        db.session.commit()
+        flash('Empty group has been deleted.')
+
     db.session.commit()
     return redirect('/')
 
