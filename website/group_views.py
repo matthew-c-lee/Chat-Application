@@ -52,21 +52,28 @@ def group_chat(group_id):
     # find the actual group from the name
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
-    if request.method == 'POST': #if button is pressed
-        message = request.form.get('message')
+    # make sure they're a member of the group (if they're not, error)
+    if not db.session.query(user_groups).filter((user_groups.c.user_id==current_user.id) & (user_groups.c.group_id==group.group_id)).first():
+        flash('You are not a member of this group.', category='error')
+        return redirect('/')
+    
+    else: # if they are a member of the group:
 
-        if len(message) < 1:
-            flash('Message is too short.', category='error')
-        else:
-            new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
-            db.session.add(new_message)
-            db.session.commit()
-            # flash('Message sent.', category='success')
-        return redirect('/group-chat/' + str(group.group_id))
+        if request.method == 'POST': #if button is pressed
+            message = request.form.get('message')
 
-    # east = timezone('US/Eastern')
-           
-    return render_template("group_chat.html", User=User, user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc, str=str, datetime=datetime)
+            if len(message) < 1:
+                flash('Message is too short.', category='error')
+            else:
+                new_message = Message(data=message, user_id=current_user.id, group_id = group.group_id)
+                db.session.add(new_message)
+                db.session.commit()
+                # flash('Message sent.', category='success')
+            return redirect('/group-chat/' + str(group.group_id))
+
+        # east = timezone('US/Eastern')
+            
+        return render_template("group_chat.html", User=User, user=current_user, username=current_user.username, user_db=User, group=group, Message=Message, desc=desc, str=str, datetime=datetime)
 
 # page for adding members
 @group_views.route('/add-members/<string:group_chat>', methods=['GET', 'POST'])
