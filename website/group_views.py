@@ -92,10 +92,10 @@ def add_member(group_id, member_id):
 
     return redirect('/group-chat/' + str(group.group_id))
 
-@group_views.route('/leave-group/<string:group_chat>/<string:id>', methods=['GET', 'POST'])
+@group_views.route('/leave-group/<string:group_id>/<string:id>', methods=['GET', 'POST'])
 @login_required
-def leave_group(group_chat, id):
-    db.session.query(user_groups).filter(user_groups.c.user_id == id).delete()
+def leave_group(group_id, id):
+    db.session.query(user_groups).filter(and_(user_groups.c.user_id == id, user_groups.c.group_id == group_id)).delete()
     db.session.commit()
     return redirect('/')
 
