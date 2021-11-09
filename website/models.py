@@ -1,12 +1,13 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
+import pytz
 
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    date = db.Column(db.DateTime(timezone=True), default=func.now(tz=pytz.timezone('US/Eastern')))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
     recipient_id = db.Column(db.Integer)
     group_id = db.Column(db.Integer)
@@ -25,8 +26,6 @@ user_groups = db.Table('user_groups',
 )
  
 class User(db.Model, UserMixin):
-    # __tablename__ = 'user'
-    # user1_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     answer = db.Column(db.String(150)) # security word
@@ -36,19 +35,10 @@ class User(db.Model, UserMixin):
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')
 
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
     groups = db.relationship('Group', secondary=user_groups, backref=db.backref('members', lazy='dynamic'))
-
-    # groups = db.relationship('group', secondary=UserGroup, backref=db.backref('users', lazy='dynamic'))
-
-# class Group(db.Model): 
-#     __tablename__ = 'group'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(255))
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
-#     users = db.relationship('user', secondary=UserGroup, backref='user')
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
 
 class Group(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)

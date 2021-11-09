@@ -1,28 +1,62 @@
-{% extends "base.html" %} {% block title %}Profile{% endblock %} {% block content
-    %}
-
-
-    <form method="POST">
-      <h2 align="center">{{user.username}}</h2>
-
-      <li style="height: 200px" class="list-group-item">
-        <h6 align="center">Profile</h6>
-        <h6 align="left">Current Status: {{user.status}}</h6>
-        <div style="float: left; width: 100%">
-          <!-- change status -->
-          <div style="float: left; width: 80%" class="form-group"> <input type="text" class="form-control" id="status" name="status"placeholder="Change your Status" />
-          </div>
-          <div style="float: left; padding-left: 15px"><button type="submit" class="btn btn-primary">Update</button></div>
+{% extends "base.html" %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img style="width:130px" class="rounded-circle account-img" src="{{ image_file }}">
+        <div style="padding-left: 20px" class="media-body">
+          <h2 class="account-heading">{{ current_user.username }}</h2>
+          {% if current_user.status %}
+            <p class="text-secondary">{{ current_user.status }}</p>
+          {% endif %}
         </div>
+      </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
 
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
 
-          <div style="height: 45px">
-            <div style="float: left; padding-right: 2%; width: 45px; height: 45px">
-              <img style="width: 45px; height: 45px" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="rounded-circle">
+                <div class="form-group">
+                    {{ form.status.label(class="form-control-label") }}
+
+                    {% if form.status.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.status.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.status(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.picture.label() }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span></br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
             </div>
-          <div style="float: left; padding-top: .6%"><button type="submit" class="btn btn-link btn-sm">Change Profile Picture</button></div>
-          </div>
-    </li>
-    </form>
-    {% endblock %}
-    
+        </form>
+    </div>
+{% endblock content %}
