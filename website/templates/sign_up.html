@@ -1,20 +1,36 @@
 {% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
 content %}
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+  rel="stylesheet" 
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+  crossorigin="anonymous">
+  <link rel="stylesheet" 
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+  <script src="//code.jquery.com/jquery.min.js"></script>
+<script src="jquery.passtrength.js"></script>
+
+</head>
+<body>
 <form method="POST">
   <h2 align="center">Sign Up</h2>
-  <div class="form-group">
-    <label for="username">Username</label>
+  <p align = "center">Already have an account? <a href = "login" style="text-decoration: none;">Sign in!</a></p>
+  <div class="d-grid gap-2 col-6 mx-auto">
+  <div class="form-floating">
+    
     <input
       type="text"
       class="form-control"
       id="username"
       name="username"
       placeholder="Enter Username"
+      required
     />
+    <label for="username" class = "bi bi-person">Username</label>
   </div>
 
-  <div class="form-group">
-    <label for="firstName">First Name</label>
+  <div class="form-floating">
+    
     <input
       type="text"
       class="form-control"
@@ -22,65 +38,100 @@ content %}
       name="firstName"
       placeholder="Enter First Name"
     />
+    <label for="firstName">First Name</label>
   </div>
 
-  <br />
-  <h5>The password must be at least 7 characters long and must contain at least one letter, </h5>
-  <h5> one number, and one special character: !@#$%^&*-+()</h5>
-  <br />
+  
 
-  <div class="form-group">
-    <label for="password1">Password</label>
+  <div class="form-floating">
     <input
       type="password"
       class="form-control"
       id="password1"
       name="password1"
       placeholder="Enter Password"
+      required
     />
+    <label for="password1" class = "bi bi-lock">Password</label>
+    
+
   </div>
 
-  <div class="form-group">
-    <label for="password2">Password (Confirm)</label>
+  <div class="form-floating">
+    
     <input
       type="password"
       class="form-control"
       id="password2"
       name="password2"
       placeholder="Confirm Password"
+      required
     />
+    <label for="password2" class = "bi bi-lock">Confirm Password</label>
+
   </div>
+  </div>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <a onClick = "showHidePassword();" href ="#" style="text-align: right; text-decoration:none;" id = "show-hide"><i class = "bi bi-eye" id="show_eye"></i><i>Show</i></a>
+  
 
-
-  <select class="selectpicker" title="question" type='text' name='question' id='question'>
-    <option data-hidden="true">Choose security question</option>
+<div class = "form-floating">
+  <select class="form-select" title="question" type='text' name='question' id='question' required>
+    <option value="">Choose security question</option>
     <option value="In what city were you born?">In what city were you born?</option>
     <option value="What is the name of your favorite pet?" >What is the name of your favorite pet?</option>
     <option value="What is the name of your first school?" >What is the name of your first school?</option>
     <option value="What was the make of your first car?" >What was the make of your first car?</option>
     <option value="What was your first job?" >What was your first job?</option>
   </select>
+<label for="question" class="bi bi-question-circle"> Security Question</label>
+</div>
 
 
-
-  <div class="form-group">
-    
+  <div class="form-floating">
     <input
       type="text"
       class="form-control"
       id="answer"
       name="answer"
       placeholder="Write your answer"
+      required
     />
+    <label for="answer">Security Question Answer</label>
   </div>
 
 
-  <h5 style="color:red">Warning!</h5>
-  <h5 style='color:red'>Write down your username, password, and security word. If forgotton the account will be inaccessible.</h5>
+  <p style="color:red"><strong>Warning!</strong> <br>
+  Write down your username, password, and security question answer. If forgotten, the account will be inaccessible.</p>
   
 
   <br />
+</div>
+<div class="d-grid gap-2 col-4 mx-auto">
+  <button type="submit" class="btn btn-primary btn-lg" style="font-weight:bold;">Submit</button>
+</div>
+</div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<script>
+  function showHidePassword() {
+    var x = document.getElementById("password1");
+    var y = document.getElementById("password2");
+    var eye = document.getElementById("show_eye");
+
+    if (x.type === "password") {
+      x.type = "text";
+      y.type = "text";
+      document.getElementById('show_eye').className = "bi bi-eye-slash";
+      document.getElementById('show-hide').innerHTML = "<i class = 'bi bi-eye-slash' id='show_eye'>Hide";
+    }
+    else if (x.type === "text") {
+      x.type = "password";
+      y.type = "password";
+      document.getElementById('show_eye').className = "bi bi-eye";
+      document.getElementById('show-hide').innerHTML = "<i class = 'bi bi-eye' id='show_eye'>Show";
+    }
+  }
+</script>
+</body>
 {% endblock %}
