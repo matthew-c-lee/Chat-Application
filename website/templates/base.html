@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html>
+  <style>
+     #cornerpic {
+        object-fit: cover;
+        width:40px;
+        height:40px;
+    }
+  </style>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -50,7 +57,7 @@
       
         <div class="navbar-nav">
           {% if current_user.is_authenticated %}
-          <a class="nav-item nav-link" id="chat" href="/profile">{{current_user.username}}<img style="width:40px; padding-left: 10px;" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></a>
+          <a class="nav-item nav-link" id="chat" href="/profile">{{current_user.username}}&nbsp;&nbsp;<img id="cornerpic" style="width: 40px;" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></a>
           {% endif %}
         </div>
       
