@@ -98,7 +98,9 @@
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
             <li style="height: 60px" class="list-group-item">
-                <div style="float: left"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == friend.friend_id).first_or_404().image_file) }}"></div>
+                <!-- profile pictures -->
+                <div style="float: left"><a href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}"><img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == friend.friend_id).first_or_404().image_file) }}"></a></div>
+
                 <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}</a></div>
                 
                 <!-- check that they're not already chatting with them -->
@@ -110,14 +112,17 @@
     {% endif %}
     
     {% if user.groups %}
-        <li class="list-group-item"><h4 align="center">Group Chats</h4></li>
-        {% for group in user.groups %}
+    <li class="list-group-item"><h4 align="center">Group Chats</h4></li>
+        {% for specific_group in user.groups %}
             <li style="height: 60px" class="list-group-item">
-                <div style="float:left; padding-right: 5px"><a class="btn btn-dark btn-sm" id="chat" href="/group-chat/{{group.group_id}}">{{group.group_name}}</a></div>
-                
+                <div style="float: left; padding-right: 10px"><a class="btn btn-dark btn-sm" id="chat" href="/group-chat/{{specific_group.group_id}}">{{specific_group.group_name}}</a></div>
+
                 <!-- edit group name -->
-                <div style="float: left"><a class="close" id="chat" href="/change-group-name/{{group.group_id}}"><span aria-hidden="true"><i class="material-icons">mode_edit</i></span></a></div>
-                <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/group-chat/{{group.group_id}}">Chat</a></div>
+                <div style="float: left"><a class="close" id="chat" href="/change-group-name/{{specific_group.group_id}}"><span aria-hidden="true"><i class="material-icons">mode_edit</i></span></a></div>
+                
+                
+                <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/group-chat/{{specific_group.group_id}}">Chat</a></div>
+
             </li>
         {% endfor %}
     {% endif %}

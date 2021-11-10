@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+  #profilepic {
+      object-fit: cover;
+      width:130px;
+      height:130px;
+  }
+</style>
+
 <div class="content-section">
   <div class="media">
-    <div align="center"><img style="width:130px" class="rounded-circle account-img" src="{{ image_file }}"></div>
+    <img id=profilepic style="width:130px" class="rounded-circle account-img" src="{{ image_file }}">
+
     <div style="padding-left: 20px" class="media-body">
       <h2 class="account-heading">{{ user.username }}</h2>
       <p class="text-secondary">{{ user.status }}</p>
