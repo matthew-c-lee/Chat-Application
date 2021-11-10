@@ -18,7 +18,7 @@
                 {% if message.user_id == user.id %}
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: right; padding-left: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
+                        <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
                         <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                         <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message-group/{{message.id}}/{{group.group_id}}"><span aria-hidden="true">&times;</span></a></div>
                     
@@ -34,13 +34,13 @@
                             {% endif %}
                         </div>
 
-                        <div style="overflow-wrap: break-word" align="left">{{message.data}}</div>
+                        <div style="overflow-wrap: break-word" align="right">{{message.data}}</div>
                 
                 </li>
                 {% else %}
                 <li class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: left; padding-right: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
+                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
                         <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                     
                         <!-- if the message is old, show full date and time -->

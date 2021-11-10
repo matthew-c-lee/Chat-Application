@@ -21,7 +21,7 @@
           {% for search_user in user_db %}
             <li style="height: 70px" class="list-group-item">
                 <!-- their profile picture -->
-                <div style="float: left; padding-right: 10px"><a href="/profile/{{search_user.username}}"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + search_user.image_file) }}"></a></div>
+                <div style="float: left; padding-right: 10px"><a href="/profile/{{search_user.username}}"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + search_user.image_file) }}"></a></div>
 
                 <!-- their name appears here -->
                 <div style="float: left; width: 120px"><a class="btn btn-link" id="chat" href="/profile/{{search_user.username}}">{{search_user.username}}</a></div>
