@@ -63,22 +63,12 @@
         </div>
     </ul>
     <form method="POST">
-        <!-- <textarea name="message" id="message" class="form-control">message1</textarea> -->
-        <div style="padding-left: 20px" class="form-floating">
-            <form id="message">
-                <input style="float:left; width:70%" 
-                    type="text"
-                    class="form-control"
-                    id="message"
-                    name="message"
-                    placeholder="Message"
-                    >
-            </form>
-        </div>
+        <textarea name="message" id="message" class="form-control"></textarea>
+        <br /> 
         
         <!-- <textarea name="message" id="message" class="form-control"></textarea> -->
         
-        <div style="float:left; padding-left: 10px">
+        <div style="float: right">
             <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
             <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();" >Send</button>
         </div>
