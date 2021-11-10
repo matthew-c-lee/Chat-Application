@@ -8,6 +8,7 @@ from sqlalchemy import and_, desc
 import secrets
 import os
 import datetime
+from .forms import UpdateGroupForm
 
 group_views = Blueprint('group_views', __name__)
 
@@ -29,21 +30,25 @@ def create_group():
 
     return render_template("create_group.html", user=current_user)
 
+
 @group_views.route('/change-group-name/<string:group_id>', methods=['GET', 'POST'])
 def change_group_name(group_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
-    if request.method == 'POST':
-        new_name = request.form.get('group-name')
-        
-        if len(new_name) > 0:
-            group.group_name = new_name
-            db.session.commit()
+    form = UpdateGroupForm()
 
-        # flash("Created " + group_name)
-        return redirect('/group-chat/' + str(group.group_id))
+    form = UpdateGroupForm()
+    if form.validate_on_submit():
+        current_user.status = form.status.data
 
-    return render_template("change_group_name.html", user=current_user)
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect('/')
+    elif request.method == 'GET':
+        form.group_name.data = group.group_name
+
+    return render_template("change_group_name.html", form=form)
+
 
 # the actual group chat
 @group_views.route('/group-chat/<string:group_id>', methods=['GET', 'POST'])

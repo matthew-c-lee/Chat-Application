@@ -37,3 +37,7 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError('That username is taken. Please choose a different one.')
+
+class UpdateGroupForm(FlaskForm):
+    submit = SubmitField('Update')
+    group_name = StringField('Group Name', validators=[Length(min=4, max=80)])
