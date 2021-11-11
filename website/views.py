@@ -13,6 +13,7 @@ from .forms import RegistrationForm, LoginForm, UpdateAccountForm
 
 views = Blueprint('views', __name__)
 
+# saves the picture
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -26,6 +27,7 @@ def save_picture(form_picture):
 
     return picture_fn
 
+# your profile page
 @views.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -34,41 +36,44 @@ def profile():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file
+        
         current_user.username = form.username.data
         current_user.status = form.status.data
+        db.session.commit()   #update database
 
-
-        db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('views.profile'))
+
+    # if you have loaded the page
     elif request.method == 'GET':
+        # fills out the forms based on your current username and status
         form.username.data = current_user.username
         form.status.data = current_user.status
 
+    # grabs the image out of the profile pics folder
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('profile.html', title='Account', image_file=image_file, form=form, user=current_user)
 
+# profile of a specific user
 @views.route('/profile/<string:username>', methods=['GET', 'POST'])
 @login_required
 def other_profile(username):
-    # user = User.query.get_or_404(username)
-    
     user = User.query.filter(User.username == username).first_or_404()
+    
     if user:
         image_file = url_for('static', filename='profile_pics/' + user.image_file)
 
+        if request.method == 'POST':
+            user.username = request.form['username']
 
-    if request.method == 'POST':
-        user.username = request.form['username']
+            try:
+                db.session.commit()   #update database
+                return redirect('/')
+            except:
+                return 'There was an issue updating your task'
 
-        try:
-            db.session.commit()
-            return redirect('/')
-        except:
-            return 'There was an issue updating your task'
-
-    else:
-        return render_template('other_profile.html', user=user, image_file=image_file)
+        else:
+            return render_template('other_profile.html', user=user, image_file=image_file)
 
 # Code for the Add Friend button
 @views.route('/add-friend/<string:user_id>/<string:search>', methods=['GET', 'POST'])
@@ -80,7 +85,7 @@ def add_friend(user_id, search):
     if user:
         new_friend = Friend(user_id=current_user.id, friend_id=user.id, friend_name=user.username)
         db.session.add(new_friend)
-        db.session.commit()
+        db.session.commit()   #update database
         flash("You are now friends with " + user.username, category='success')
     return redirect("/search/" + search)
 
@@ -92,21 +97,11 @@ def delete_message(message_id, recipient_name):
     if message:
         if message.user_id == current_user.id:
             db.session.delete(message)
-            db.session.commit()
+            db.session.commit()   #update database
 
     return redirect('/chat/' + recipient_name)
 
-@views.route('/search/<string:search>', methods=['GET', 'POST'])
-@login_required
-def other_search(search):
-    user_db = User.query.filter(User.username.like('%'+search+'%')).all()
-    if request.form.get('search'):
-        search = request.form.get('search')
-        return redirect("/search/" + search)
-
-
-    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_)
-
+# search before the user inputs a query
 @views.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
@@ -118,17 +113,31 @@ def search():
 
     return render_template("search.html", user=current_user, current_user=current_user, user_db=user_db, search=search, Friend=Friend, and_=and_)
 
+# search with query
+@views.route('/search/<string:search>', methods=['GET', 'POST'])
+@login_required
+def other_search(search):
+    user_db = User.query.filter(User.username.like('%'+search+'%')).all()
+    if request.form.get('search'):
+        search = request.form.get('search')
+        return redirect("/search/" + search)
+
+
+    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_)
+
+# settings page
 @views.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
         
     return render_template("settings.html", user=current_user)
 
+# frequently asked questions page
 @views.route('/faq', methods=['GET', 'POST'])
 def faq():
-        
     return render_template("faq.html", user=current_user)
 
+# chat page before selecting a user or group
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def chat():
@@ -141,14 +150,15 @@ def chat():
         else:
             new_message = Message(data=message, user_id=current_user.id)
             db.session.add(new_message)
-            db.session.commit()
+            db.session.commit()   #update database
 
     # Get their username
     user_db = User.query.all()
-    message_db = Message.query.all()
+    # message_db = Message.query.all()
 
     return render_template("chat.html", User=User, user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect)
 
+# chat with a user selected
 @views.route('/chat/<string:recipient>', methods=['GET', 'POST'])
 @login_required
 def chat_with(recipient):
@@ -162,15 +172,14 @@ def chat_with(recipient):
         else:
             new_message = Message(data=message, user_id=current_user.id, recipient_id = recipient.id)
             db.session.add(new_message)
-            db.session.commit()
+            db.session.commit()   #update database
             # flash('Message sent.', category='success')
             return redirect('/chat/' + recipient.username)
 
 
     # Get their username
     user_db = User.query.all()
-    message_db = Message.query.all()
-
+    # message_db = Message.query.all()
  
     return render_template("chat.html", User=User, user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect, message1=None, datetime=datetime)
 
