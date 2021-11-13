@@ -45,6 +45,9 @@ def sign_up():
         password2 = request.form.get('password2')
         answer = request.form.get('answer')
         question = request.form.get('question')
+        #text_color='black'
+        #text_size='small'
+        #background='light'
 
         user = User.query.filter_by(username=username).first()
      
@@ -80,7 +83,8 @@ def sign_up():
         elif len(answer) < 1:
             flash('Security word must be at least 1 character', category='error')
         else:
-            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), answer=answer, question=question)
+            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), 
+                            answer=answer, question=question)
             db.session.add(new_user)
             db.session.commit()
 
@@ -123,6 +127,7 @@ def password_reset():
         user = User.query.filter_by(username=username).first()
 
         print(username)
+       
         
         if not user:
             flash('Write down your original username', category='error')
