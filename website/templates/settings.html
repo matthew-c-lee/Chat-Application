@@ -3,61 +3,56 @@
 
 
     <form method="POST">
-      <h2 align="center">Settings</h2>
 
-    </form>
-
-    <li class="list-group-item">
-      <h6 align="center">Category Name</h6>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">Toggle1</label>
+    <li class="list-group-item" style="background-color: lightgoldenrodyellow">
+      <h3 align="center">Settings</h3>
+      
+      <!-- text color selection button -->  
+      <div class = "form-floating">
+        <label for="textColor" class="bi bi-question-circle"> Select your message text color:  </label>
+        <select class="form-select" title="textColor" type='text' name='textColor' id='textColor' required>
+          <option value="black">Default</option>
+          <option value="black">Black</option>
+          <option value="blue" >Blue</option>
+          <option value="green" >Green</option>
+          <option value="red" >Red</option>
+          <option value="orange" >Orange</option>
+        </select>
       </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">Toggle2</label>
-      </div>
-    </li>
-
-    <li class="list-group-item">
-      <h6 align="center">Category Name</h6>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">Toggle3</label>
-      </div>
-      <div><button type="button" class="btn btn-link btn-sm">Edit Profile</button></div>
-      <div><button type="button" class="btn btn-link btn-sm">View Profile</button></div>
-
-    </li>
-
-    <li class="list-group-item">
-      <h6 align="center">Cosmetic</h6>
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Message Color
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">White</a>
-          <a class="dropdown-item" href="#">Blue</a>
-          <a class="dropdown-item" href="#">Green</a>
-          <a class="dropdown-item" href="#">Orange</a>
-          <a class="dropdown-item" href="#">Teal</a>
-        </div>
-      </div>
-
       <br />
 
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Text Size
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" href="#">Small</a>
-          <a class="dropdown-item" href="#">Medium</a>
-          <a class="dropdown-item" href="#">Large</a>
-        </div>
+      <!-- text size selection button -->
+      <div class = "form-floating">
+        <label for="textSize" class="bi bi-question-circle"> Select your message text size: </label>
+        <select class="form-select" title="textSize" type='text' name='textSize' id='textSize' required>
+          <option value="15px">Default</option>
+          <option value="15px">Small</option>
+          <option value="25px" >Medium</option>
+          <option value="35px" >large</option>
+        </select>
       </div>
+      <br />
+
+      <!-- background selection button-->
+      <div class = "form-floating">
+        <label for="background" class="bi bi-question-circle"> Select your background: </label>
+        <select class="form-select" title="background" type='text' name='background' id='background' required>
+          <option value="white">Default</option>
+          <option value="white">White</option>
+          <option value="gray" >Gray</option>
+          <option value="orange" >Orange</option>
+        </select>
+      </div>
+      <br />
+    
+      <!-- submit buttom-->
+      <div class="d-grid gap-2 col-4 mx-auto">
+         <button type="submit" class="btn btn-primary btn-lg" style="font-weight:bold;">Submit</button>
+      </div>
+      
+      
     </li>
 
+  </form>
     {% endblock %}
     

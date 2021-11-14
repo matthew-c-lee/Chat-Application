@@ -123,16 +123,21 @@ def other_search(search):
         return redirect("/search/" + search)
 
 
-    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_)
-
-# settings page
+# settings
 @views.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
-        
+    if request.method == 'POST': #if button is pressed
+        current_user.text_color = request.form.get('textColor')
+        current_user.text_size = request.form.get('textSize')
+        current_user.background = request.form.get('background')
+        db.session.commit()             
+
+        flash('Your settings were changed.', category='success')
+        return render_template("settings.html", User=User, user=current_user, username=current_user.username)
+               
     return render_template("settings.html", user=current_user)
 
-# frequently asked questions page
 @views.route('/faq', methods=['GET', 'POST'])
 def faq():
     return render_template("faq.html", user=current_user)
