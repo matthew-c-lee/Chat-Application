@@ -69,6 +69,9 @@
         <br /> 
         <div style="float: right">
             <button type="submit" class="btn btn-primary">Send</button>
+            <!-- Send Button with sound -->
+            <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
+            <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();"  >Send</button>
             <!-- Send Button -->
             <!-- <a class="btn btn-primary" id="send" href="/send-chat/{{group.group_name}}/{{message}}">Send</a> -->
         </div>
