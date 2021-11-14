@@ -46,8 +46,8 @@ def sign_up():
         answer = request.form.get('answer')
         question = request.form.get('question')
         text_color='black'
-        text_size='small'
-        background='light'
+        text_size='15px'
+        background='white'
 
         user = User.query.filter_by(username=username).first()
      
