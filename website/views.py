@@ -128,7 +128,7 @@ def settings():
         current_user.background = request.form.get('background')
         db.session.commit()             
 
-        flash('Settings were changed.', category='success')
+        flash('Your settings were changed.', category='success')
         return render_template("settings.html", User=User, user=current_user, username=current_user.username)
                
     return render_template("settings.html", user=current_user)
