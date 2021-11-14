@@ -34,7 +34,7 @@
                             {% endif %}
                         </div>
 
-                        <div style="overflow-wrap: break-word" align="right">{{message.data}}</div>
+                        <div style="overflow-wrap: break-word; color: {{user.text_color}}" align="right">{{message.data}}</div>
                 
                 </li>
                 {% else %}
@@ -55,7 +55,7 @@
                         {% endif %}
                     </div>
 
-                    <div style="overflow-wrap: break-word" align="left">{{message.data}}</div>
+                    <div style="overflow-wrap: break-word; color: {{user.text_color}}" align="left">{{message.data}}</div>
                 </li>
                 {% endif %}
             {% endif %}
