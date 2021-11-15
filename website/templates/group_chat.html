@@ -3,11 +3,8 @@
     <h2 align="center">Chat</h2>
 
     <!-- Chat Box -->
-<div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%; background-color: {{user.background}}">
+<div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%>
     <ul class="list-group list-group-flush" id="messages">
-    <!-- {% if selected_friend: %} -->
-        <li class="list-group-item"></li>
-    <!-- {% endif %} -->
         <h5 align="center">{{group.group_name}}</h5>
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
         <!-- <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px"> -->
@@ -16,7 +13,7 @@
             <!-- Your messages -->
             {% if message.group_id == group.group_id %}
                 {% if message.user_id == user.id %}
-                <li class="list-group-item">
+                <li style="background-color: {{user.background}}" class="list-group-item">
                     <div style="height:30px">
                         <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
                         <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
@@ -38,7 +35,7 @@
                 
                 </li>
                 {% else %}
-                <li class="list-group-item">
+                <li style="background-color: {{user.background}}" class="list-group-item">
                     <div style="height:30px">
                         <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
                         <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>

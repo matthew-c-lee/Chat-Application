@@ -4,7 +4,7 @@
 
     <!-- Chat Box -->
 {% if recipient %}
-<div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%; background-color: {{user.background}}">
+<div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%">
     <ul class="list-group list-group-flush" id="messages">
         <h5 align="center">{{recipient.username}}</h5>
     
@@ -12,7 +12,7 @@
             {% for message in Message.query.order_by(desc(Message.id)).all() %}
             <!-- Your messages -->
             {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
-                <li class="list-group-item">
+                <li style="background-color: {{user.background}}" class="list-group-item">
                     
                     <div style="height:30px">
                         <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
@@ -38,7 +38,7 @@
 
             <!-- other person's messages -->
             {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
-                <li class="list-group-item">
+                <li style="background-color: {{user.background}}" class="list-group-item">
                     <div style="height:30px">
                         <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
                         <div style="float: left"><h6>{{recipient.username}}</h6></div>
@@ -70,7 +70,6 @@
         <!-- <textarea name="message" id="message" class="form-control"></textarea> -->
         <!--send message with audio effect-->
         <div style="float: right">
-        <div align="right">
             <!-- sending message with sound effect -->
             <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
             <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();" >Send</button>
@@ -81,7 +80,7 @@
 </div>
 {% endif %}
 
-    <br />
+<br />
 
 
 
