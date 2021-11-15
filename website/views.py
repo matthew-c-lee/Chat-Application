@@ -123,7 +123,9 @@ def other_search(search):
         return redirect("/search/" + search)
 
 
-# settings
+    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_)
+
+# settings page
 @views.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
@@ -138,6 +140,7 @@ def settings():
                
     return render_template("settings.html", user=current_user)
 
+# frequently asked questions page
 @views.route('/faq', methods=['GET', 'POST'])
 def faq():
     return render_template("faq.html", user=current_user)
