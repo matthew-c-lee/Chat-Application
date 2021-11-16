@@ -5,17 +5,19 @@
         text-align: center;
     }
     .accordion {
-        background-color: #eee;
+        background-color: rgb(212, 212, 212);
         color: #444;
         cursor: pointer;
-        padding: 18px;
+        padding: 16px;
         width: 100%;
-        text-align: center;
+        text-align: left;
         border: none;
         outline: none;
-        transition: 0.4s;
+        transition: 0.8s;
         font-size: larger;
         font-weight: bold;
+        border-radius: 8px;
+        margin-top:6px;
     }
 
     /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
@@ -30,7 +32,8 @@
         background-color: white;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.2s ease-out;
+        transition: max-height 0.4s ease-out;
+        width: 60%;
     }
 
     .accordion:after {
@@ -40,6 +43,7 @@
         color: #777;
         float: right;
         margin-left: 5px;
+        padding-top:5px;
     }
 
     .active:after {
