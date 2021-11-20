@@ -58,7 +58,7 @@ def sign_up():
         elif len(username) > 14:  # password too long
             flash('Username must not exceed 14 characters.', category='error') 
         elif not(re.match(r'^\w+$', username)):
-            flash('Username cannot contain any special characters', category='error')
+            flash('Username can only contain "_", no other special characters', category='error')
         elif re.search(r"\s", username):
             flash('Username cannot contain any spaces.', category='error')
         elif len(first_name) < 2:

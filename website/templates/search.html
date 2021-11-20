@@ -26,7 +26,9 @@
                   <!-- check that they're already your friend (if they are, no add button) -->
                   {% if not Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == search_user.id)).first() %}
                     <!-- "Add" button -->
+                    {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == search_user.id)).first() %}
                     <div><a style="float: left; padding-top: 6px" class="btn btn-secondary btn-sm" href="/add-friend/{{search_user.id}}/{{search}}">Add</a></div>
+                    {% endif %} 
                   {% endif %}
                 {% else %}
                 {% endif %}

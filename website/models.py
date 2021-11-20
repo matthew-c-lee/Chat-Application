@@ -23,7 +23,12 @@ user_groups = db.Table('user_groups',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('group_id', db.Integer, db.ForeignKey('group.group_id'))
 )
- 
+class Block(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
+    blocked_id = db.Column(db.Integer)
+    blocked_name = db.Column(db.String(10000))
+    
 class User(db.Model, UserMixin):
     # __tablename__ = 'user'
     # user1_id = db.Column(db.Integer, primary_key=True)
@@ -35,6 +40,7 @@ class User(db.Model, UserMixin):
     status = db.Column(db.String(150))
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')
+    block_list = db.relationship('Block')
 
 
     id = db.Column(db.Integer, primary_key=True)
@@ -53,3 +59,5 @@ class User(db.Model, UserMixin):
 class Group(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
     group_name = db.Column(db.String(20))
+
+
