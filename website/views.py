@@ -146,7 +146,8 @@ def search():
 
     return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_, Block=Block)
 
-@views.route('/search', methods=['GET', 'POST'])
+# search with query
+@views.route('/search/<string:search>', methods=['GET', 'POST'])
 @login_required
 def other_search(search):
     user_db = User.query.filter(User.username.like('%'+search+'%')).all()
@@ -154,7 +155,8 @@ def other_search(search):
         search = request.form.get('search')
         return redirect("/search/" + search)
 
-    return render_template("search.html", user=current_user, current_user=current_user, user_db=user_db, search=search, Friend=Friend, and_=and_, Block=Block)
+
+    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_, Block=Block)
 
 
 # settings page
