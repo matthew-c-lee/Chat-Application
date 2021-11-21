@@ -102,6 +102,18 @@
             </li>
         {% endfor %}
     {% endif %}
+
+    <li style="height: 70px" class="list-group-item"><h4 align="center">Block List</h4></li>
+    {% if user.block_list %}
+        {% for blocked in user.block_list %}
+            <li class="list-group-item">
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{blocked.blocked_name}}">{{blocked.blocked_name}}</a></div>
+                <a class="btn btn-secondary btn-sm" href="/remove-block/{{blocked.blocked_id}}">Unblock</a>
+            </li>
+        {% endfor %}
+    {% endif %}
+
+
     
     {% if user.groups %}
     <li class="list-group-item"><h4 align="center">Group Chats</h4></li>

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import User, Message, Friend, Group, user_groups
+from .models import User, Message, Friend, Group, Block, user_groups
 from . import db
 import json
 from sqlalchemy import and_, desc
@@ -72,8 +72,7 @@ def other_profile(username):
             except:
                 return 'There was an issue updating your task'
 
-        else:
-            return render_template('other_profile.html', user=user, image_file=image_file)
+        return render_template('other_profile.html', user=user,image_file=image_file, current_user=current_user, and_=and_ , Block=Block)
 
 # Code for the Add Friend button
 @views.route('/add-friend/<string:user_id>/<string:search>', methods=['GET', 'POST'])
@@ -85,7 +84,8 @@ def add_friend(user_id, search):
     if user:
         new_friend = Friend(user_id=current_user.id, friend_id=user.id, friend_name=user.username)
         db.session.add(new_friend)
-        db.session.commit()   #update database
+        db.session.commit()
+        
         flash("You are now friends with " + user.username, category='success')
     return redirect("/search/" + search)
 
@@ -94,6 +94,51 @@ def add_friend(user_id, search):
 def delete_message(message_id, recipient_name):
     message = Message.query.get(message_id)
     
+@views.route('/add-block/<string:user_id>', methods=['GET', 'POST'])
+def add_block(user_id):
+
+    user = User.query.get(user_id)
+
+    #friend = Friend.query.filter_by(Friend.user_id == current_user.id).first()
+   #new_friend = Friend(user_id=current_user.id, friend_id=user.id, friend_name=user.username)
+    #flash(new_friend)
+   # if new_friend:
+   #     db.session.delete(new_friend)
+    #    db.session.commit()
+
+    new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id).first()
+    db.session.add(new_block)
+    db.session.commit()
+
+    if old_friend:
+        db.session.delete(old_friend)
+        db.session.commit()
+
+
+    flash("You have blocked " + user.username, category='success')
+
+    return redirect(url_for('views.chat'))
+
+@views.route('/remove-block/<string:user_id>', methods=['GET', 'POST'])
+def remove_block(user_id):
+
+    user = User.query.get(user_id)
+
+    #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
+    old_block = Block.query.filter(Block.user_id == current_user.id).first()
+    db.session.delete(old_block)
+    db.session.commit()
+    
+    flash("You have unblocked " + user.username, category='success')
+
+    return redirect(url_for('views.chat'))
+
+@views.route('/delete-message', methods=['POST'])
+def delete_message():
+    message = json.loads(request.data)
+    messageId = message['messageId']
+    message = Message.query.get(messageId)
     if message:
         if message.user_id == current_user.id:
             db.session.delete(message)
@@ -111,10 +156,9 @@ def search():
         search = request.form.get('search')
         return redirect("/search/" + search)
 
-    return render_template("search.html", user=current_user, current_user=current_user, user_db=user_db, search=search, Friend=Friend, and_=and_)
+    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_, Block=Block)
 
-# search with query
-@views.route('/search/<string:search>', methods=['GET', 'POST'])
+@views.route('/search', methods=['GET', 'POST'])
 @login_required
 def other_search(search):
     user_db = User.query.filter(User.username.like('%'+search+'%')).all()
@@ -122,8 +166,8 @@ def other_search(search):
         search = request.form.get('search')
         return redirect("/search/" + search)
 
+    return render_template("search.html", user=current_user, current_user=current_user, user_db=user_db, search=search, Friend=Friend, and_=and_, Block=Block)
 
-    return render_template("search.html", user=current_user, current_user=current_user, user_db = user_db, search=search, Friend=Friend, and_=and_)
 
 # settings page
 @views.route('/settings', methods=['GET', 'POST'])
