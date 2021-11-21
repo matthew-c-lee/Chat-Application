@@ -84,8 +84,8 @@
 
 
 
-<!-- Friend's List -->
 <div style="float: left; width: 40%; padding-left: 0%">
+    <!-- Friend's List -->
     <li style="height: 70px" class="list-group-item"><h4 align="center">Friends List</h4></li>
     {% if user.friends_list %}
         {% for friend in user.friends_list %}
@@ -103,6 +103,7 @@
         {% endfor %}
     {% endif %}
 
+    <!-- Block List -->
     <li style="height: 70px" class="list-group-item"><h4 align="center">Block List</h4></li>
     {% if user.block_list %}
         {% for blocked in user.block_list %}

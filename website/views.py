@@ -94,6 +94,13 @@ def add_friend(user_id, search):
 def delete_message(message_id, recipient_name):
     message = Message.query.get(message_id)
     
+    if message:
+        if message.user_id == current_user.id:
+            db.session.delete(message)
+            db.session.commit()   #update database
+
+    return redirect('/chat/' + recipient_name)
+    
 @views.route('/add-block/<string:user_id>', methods=['GET', 'POST'])
 def add_block(user_id):
 
