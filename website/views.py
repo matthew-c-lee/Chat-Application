@@ -134,18 +134,6 @@ def remove_block(user_id):
 
     return redirect(url_for('views.chat'))
 
-@views.route('/delete-message', methods=['POST'])
-def delete_message():
-    message = json.loads(request.data)
-    messageId = message['messageId']
-    message = Message.query.get(messageId)
-    if message:
-        if message.user_id == current_user.id:
-            db.session.delete(message)
-            db.session.commit()   #update database
-
-    return redirect('/chat/' + recipient_name)
-
 # search before the user inputs a query
 @views.route('/search', methods=['GET', 'POST'])
 @login_required
