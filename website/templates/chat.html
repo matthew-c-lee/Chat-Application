@@ -8,6 +8,12 @@
         <link rel="stylesheet" 
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
     </head>
+    <style>
+        #preview {
+            width:130px;
+            margin-bottom:10px;
+        }
+    </style>
     <h2 align="center">Chat</h2>
 
     <!-- Chat Box -->
@@ -79,7 +85,10 @@
         
         <div align="right">
             <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
-            <label for="file-upload" class="btn btn-secondary" style="margin-bottom:0;">
+            <div>
+                <img id="preview">
+            </div>
+            <label for="file-upload" class="btn btn-secondary" style="margin-bottom:0;" accept = ".jpg, .jpeg, .png">
                 <i class="bi bi-images"></i>
             </label>
             <input type="file" id="file-upload" style="display:none"/>
@@ -125,6 +134,16 @@
 
     <div style="float: right; padding-top: 3%"><a class="btn btn-outline-primary btn-sm" id="create-group" href="/create-group">New Group</a></div>
 </div>
+<!--Show Image Thumbnail after Uploading-->
+<script>
+    var fileInput = document.querySelector('input[type="file"]');
+    var preview = document.getElementById('preview');
+
+    fileInput.addEventListener('change', function(e) {
+        var url = URL.createObjectURL(e.target.files[0]);
+        preview.setAttribute('src', url);
+    });
+</script>
 
 {% endblock %}
     
