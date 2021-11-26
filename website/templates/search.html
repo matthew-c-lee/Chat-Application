@@ -17,9 +17,17 @@
       <br />
       <br />
 
+      <div style =   "position: fixed;
+                      right: 0;
+                      left: 0;
+                      margin-right: auto;
+                      margin-left: auto;
+                      min-height: 10em;
+                      max-width: 550px;">
+
         {% if user_db %}
           {% for search_user in user_db %}
-            <li style="height: 70px" class="list-group-item">
+            <li style="height: 70px;" class="list-group-item">
                 <!-- their profile picture -->
                 <div style="float: left; padding-right: 10px"><a href="/profile/{{search_user.username}}"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + search_user.image_file) }}"></a></div>
 
@@ -31,7 +39,10 @@
                   {% if not Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == search_user.id)).first() %}
                     <!-- "Add" button -->
                     {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == search_user.id)).first() %}
-                    <div><a style="float: left; padding-top: 6px" class="btn btn-secondary btn-sm" href="/add-friend/{{search_user.id}}/{{search}}">Add</a></div>
+                    <div><a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/add-friend/{{search_user.id}}/{{search}}">Add</a></div>
+                    
+                    {% else %}
+                    <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/remove-block/{{search_user.id}}">Unblock</a></div>
                     {% endif %} 
                   {% endif %}
                 {% else %}
@@ -39,6 +50,6 @@
             </li>
           {% endfor %}
         {% endif %}
+      </div>
     </form>
     {% endblock %}
-    

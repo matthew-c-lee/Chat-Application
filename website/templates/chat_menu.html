@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block title %}Chat{% endblock %} {% block content
+    %}
+    <h2 align="center">Chat</h2>
+
+    <!-- Chat Box -->
+
+<br />
+<!-- Friend's List -->
+
+<div style =   "position: fixed;
+                right: 0;
+                left: 0;
+                margin-right: auto;
+                margin-left: auto;
+                min-height: 10em;
+                max-width: 550px;">
+                   
+    <li style="height: 70px" class="list-group-item"><h4 align="center">Friends List</h4></li>
+    {% if user.friends_list %}
+        {% for friend in user.friends_list %}
+            <li style="height: 60px" class="list-group-item">
+                <!-- profile pictures -->
+                <div style="float: left"><a href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}"><img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == friend.friend_id).first_or_404().image_file) }}"></a></div>
+
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}</a></div>
+                
+                <!-- check that they're not already chatting with them -->
+                {% if friend.friend_id != recipient.id %}
+                    <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/chat/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">Chat</a></div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Block List -->
+    <li style="height: 70px" class="list-group-item"><h4 align="center">Block List</h4></li>
+    {% if user.block_list %}
+        {% for blocked in user.block_list %}
+            <li class="list-group-item">
+                <div style="float: left"><a href="/profile/{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}"><img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == blocked.blocked_id).first_or_404().image_file) }}"></a></div>
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}">{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}</a></div>
+                <div align="right"><a class="btn btn-outline-danger btn-sm" href="/remove-block/{{blocked.blocked_id}}">Unblock</a></div>
+
+            </li>
+        {% endfor %}
+    {% endif %}
+
+
+    
+    {% if user.groups %}
+    <li class="list-group-item"><h4 align="center">Group Chats</h4></li>
+        {% for specific_group in user.groups %}
+            <li style="height: 60px" class="list-group-item">
+                <div style="float: left; padding-right: 10px"><a class="btn btn-dark btn-sm" id="chat" href="/group-chat/{{specific_group.group_id}}">{{specific_group.group_name}}</a></div>
+
+                <!-- edit group name -->
+                <div style="float: left"><a class="close" id="chat" href="/change-group-name/{{specific_group.group_id}}"><span aria-hidden="true"><i class="material-icons">mode_edit</i></span></a></div>
+                
+                
+                <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/group-chat/{{specific_group.group_id}}">Chat</a></div>
+
+            </li>
+        {% endfor %}
+    {% endif %}
+
+    <div style="float: right; padding-top: 3%"><a class="btn btn-outline-primary btn-sm" id="create-group" href="/create-group">New Group</a></div>
+</div>
+
+{% endblock %}
+    

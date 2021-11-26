@@ -1,15 +1,16 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
-from flask_login import login_required, current_user
-from .models import User, Message, Friend, Group, Block, user_groups
-from . import db
-import json
-from sqlalchemy import and_, desc
 import secrets
 import os
 import datetime
-from flask_wtf.file import FileField, FileAllowed
 from PIL import Image
-from .forms import RegistrationForm, LoginForm, UpdateAccountForm
+
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask_login import login_required, current_user
+
+from sqlalchemy import and_, desc
+from .forms import UpdateAccountForm
+
+from .models import User, Message, Friend, Block
+from . import db
 
 views = Blueprint('views', __name__)
 
@@ -72,7 +73,7 @@ def other_profile(username):
             except:
                 return 'There was an issue updating your task'
 
-        return render_template('other_profile.html', user=user,image_file=image_file, current_user=current_user, and_=and_ , Block=Block)
+        return render_template('other_profile.html', Friend=Friend, user=user,image_file=image_file, current_user=current_user, and_=and_ , Block=Block)
 
 # Code for the Add Friend button
 @views.route('/add-friend/<string:user_id>/<string:search>', methods=['GET', 'POST'])
@@ -205,7 +206,7 @@ def chat():
     user_db = User.query.all()
     # message_db = Message.query.all()
 
-    return render_template("chat.html", User=User, user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect)
+    return render_template("chat_menu.html", User=User, user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect)
 
 # chat with a user selected
 @views.route('/chat/<string:recipient>', methods=['GET', 'POST'])
@@ -230,7 +231,7 @@ def chat_with(recipient):
     user_db = User.query.all()
     # message_db = Message.query.all()
  
-    return render_template("chat.html", User=User, user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect, message1=None, datetime=datetime)
+    return render_template("chat_with.html", User=User, user=current_user, username=current_user.username, user_db=user_db, Message = Message, recipient=recipient, desc=desc, redirect=redirect, message1=None, datetime=datetime)
 
 
 
