@@ -1,13 +1,12 @@
-from pytz import timezone
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
-from flask_login import login_required, current_user
-from .models import User, Message, Friend, Group, user_groups
-from . import db
-import json
-from sqlalchemy import and_, desc
-import secrets
-import os
 import datetime
+
+from flask import Blueprint, render_template, request, flash, redirect
+from flask_login import login_required, current_user
+
+from sqlalchemy import and_, desc
+
+from . import db
+from .models import User, Message, Group, user_groups
 from .forms import UpdateGroupForm
 
 group_views = Blueprint('group_views', __name__)

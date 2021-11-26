@@ -36,9 +36,9 @@ class User(db.Model, UserMixin):
     answer = db.Column(db.String(150)) # security word
     question = db.Column(db.String(150)) # security question
     first_name = db.Column(db.String(150))
-    text_color = db.Column(db.String(20)) # message text color
-    text_size = db.Column(db.String(20)) # message text size
-    background = db.Column(db.String(20)) # background color
+    text_color = db.Column(db.String(20), default='Black') # message text color
+    text_size = db.Column(db.String(20), default='Medium') # message text size
+    background = db.Column(db.String(20), default='White') # background color
     status = db.Column(db.String(150))
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')

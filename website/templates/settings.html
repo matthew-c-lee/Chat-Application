@@ -1,58 +1,59 @@
 {% extends "base.html" %} {% block title %}Settings{% endblock %} {% block content
     %}
 
+  <form method="POST" action="" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Settings</legend>
+        <div class="form-group">
+            {{ form.text_color.label(class="form-control-label") }}
 
-    <form method="POST">
+            {% if form.text_color.errors %}
+                {{ form.text_color(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.text_color.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.text_color(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
 
-    <li class="list-group-item" style="background-color: lightgoldenrodyellow">
-      <h3 align="center">Settings</h3>
-      
-      <!-- text color selection button -->  
-      <div class = "form-floating">
-        <label for="textColor" class="bi bi-question-circle"> Select your message text color:  </label>
-        <select class="form-select" title="textColor" type='text' name='textColor' id='textColor' required>
-          <option value="black">Default</option>
-          <option value="black">Black</option>
-          <option value="blue" >Blue</option>
-          <option value="green" >Green</option>
-          <option value="red" >Red</option>
-          <option value="orange" >Orange</option>
-        </select>
+        <div class="form-group">
+            {{ form.text_size.label(class="form-control-label") }}
+
+            {% if form.text_size.errors %}
+                {{ form.text_color(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.text_size.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.text_size(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.background.label(class="form-control-label") }}
+
+          {% if form.background.errors %}
+              {{ form.text_color(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in form.background.errors %}
+                      <span>{{ error }}</span>
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ form.background(class="form-control form-control-lg") }}
+          {% endif %}
       </div>
-      <br />
 
-      <!-- text size selection button -->
-      <div class = "form-floating">
-        <label for="textSize" class="bi bi-question-circle"> Select your message text size: </label>
-        <select class="form-select" title="textSize" type='text' name='textSize' id='textSize' required>
-          <option value="15px">Default</option>
-          <option value="15px">Small</option>
-          <option value="25px" >Medium</option>
-          <option value="35px" >Large</option>
-        </select>
-      </div>
-      <br />
-
-      <!-- background selection button-->
-      <div class = "form-floating">
-        <label for="background" class="bi bi-question-circle"> Select your background: </label>
-        <select class="form-select" title="background" type='text' name='background' id='background' required>
-          <option value="white">Default</option>
-          <option value="white">White</option>
-          <option value="gray" >Gray</option>
-          <option value="orange" >Orange</option>
-        </select>
-      </div>
-      <br />
-    
-      <!-- submit buttom-->
-      <div class="d-grid gap-2 col-4 mx-auto">
-         <button type="submit" class="btn btn-primary btn-lg" style="font-weight:bold;">Submit</button>
-      </div>
-      
-      
-    </li>
-
-  </form>
+    </fieldset>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+</form>
     {% endblock %}
     

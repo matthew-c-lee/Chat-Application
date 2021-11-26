@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from .models import User
 
 class RegistrationForm(FlaskForm):
@@ -18,6 +18,12 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
 
+class SettingsForm(FlaskForm):
+    text_color = SelectField(u'Text Color', choices = ['Black', 'Blue', 'Green', 'Red', 'Orange'], validators = [DataRequired()])
+    text_size = SelectField(u'Text Size', choices = ['Small', 'Medium', 'Large'], validators = [DataRequired()])
+    background = SelectField(u'Message Background', choices = ['White', 'Grey', 'Orange'], validators = [DataRequired()])
+
+    submit = SubmitField('Update')
 
 class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
