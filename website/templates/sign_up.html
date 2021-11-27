@@ -16,13 +16,12 @@ content %}
 
 
 <form method="POST" action="" enctype="multipart/form-data">
-  {{ form.hidden_tag() }}
   <h2 align="center">Sign Up</h2>
   <p align = "center">Already have an account? <a href = "login" style="text-decoration: none;">Sign in!</a></p>
 
 <div class="d-grid gap-2 col-6 mx-auto">
+      
       <div class="form-floating">
-        
           {% if form.username.errors %}
               {{ form.username(class="form-control form-control-lg is-invalid") }}
               <div class="invalid-feedback">
@@ -44,7 +43,7 @@ content %}
 
       <div class="form-floating">
           {% if form.password1.errors %}
-              {{ form.username(class="form-control form-control-lg is-invalid") }}
+              {{ form.password1(class="form-control form-control-lg is-invalid") }}
               <div class="invalid-feedback">
                   {% for error in form.password1.errors %}
                       <span>{{ error }}</span>
@@ -66,7 +65,7 @@ content %}
 
 <div class="form-floating">
   {% if form.password2.errors %}
-      {{ form.username(class="form-control form-control-lg is-invalid") }}
+      {{ form.password2(class="form-control form-control-lg is-invalid") }}
       <div class="invalid-feedback">
           {% for error in form.password2.errors %}
               <span>{{ error }}</span>
@@ -89,7 +88,7 @@ content %}
 
 <div class="form-floating">
   {% if form.security_question.errors %}
-      {{ form.text_color(class="form-control form-control-lg is-invalid") }}
+      {{ form.security_question(class="form-control form-control-lg is-invalid") }}
       <div class="invalid-feedback">
           {% for error in form.security_question.errors %}
               <span>{{ error }}</span>

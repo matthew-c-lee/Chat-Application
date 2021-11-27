@@ -40,8 +40,16 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+
+
+
     form = RegistrationForm()
-    if request.method == 'POST':
+
+    if request.method == 'GET':
+        return render_template("sign_up.html", user=current_user, form = form)
+
+
+    if form.validate_on_submit():
         username = request.form.get('username')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
@@ -52,7 +60,7 @@ def sign_up():
         background='white'
 
         user = User.query.filter_by(username=username).first()
-     
+    
         if user:
             flash('Username taken.', category='error')
         elif len(username) < 4:  # username is too short
@@ -65,8 +73,6 @@ def sign_up():
             flash('Username cannot contain any spaces.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
-        elif len(password1) < 5:
-            flash('Password must be at least 5 characters.', category='error')
         elif not(re.search('[a-zA-Z]', password1)):
             flash('Password must contain at least one letter.', category='error')
         elif not(any(map(str.isdigit, password1))):
@@ -91,6 +97,9 @@ def sign_up():
             return redirect(url_for('views.chat'))
 
     return render_template("sign_up.html", user=current_user, form = form)
+
+
+
 
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])

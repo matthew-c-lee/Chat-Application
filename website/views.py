@@ -63,10 +63,10 @@ def profile():
 @views.route('/profile/<string:username>', methods = ['GET', 'POST'])
 @login_required
 def other_profile(username):
-    user = User.query.filter(User.username == username).first_or_404()
+    user = User.query.filter(User.username == username).first_or_404()  #get user data
     
     if user:
-        image_file = url_for('static', filename = 'profile_pics/' + user.image_file)
+        image_file = url_for('static', filename = 'profile_pics/' + user.image_file)  
 
         if request.method == 'POST':
             user.username = request.form['username']
@@ -77,7 +77,7 @@ def other_profile(username):
             except:
                 return 'There was an issue updating your task'
 
-        return render_template('other_profile.html', Friend = Friend, user = user,image_file = image_file, 
+        return render_template('other_profile.html', Friend = Friend, user = user, image_file = image_file, 
             current_user = current_user, and_ = and_ , Block = Block)
 
 
@@ -129,13 +129,12 @@ def add_block(user_id):
 
     return redirect(url_for('views.chat'))
 
-
+# Code for unblock button
 @views.route('/remove-block/<string:user_id>', methods = ['GET', 'POST'])
 def remove_block(user_id):
 
     user = User.query.get(user_id)
 
-    #new_block = Block(user_id = current_user.id, blocked_id = user.id, blocked_name = user.username)
     old_block = Block.query.filter(Block.user_id == current_user.id).first()
     db.session.delete(old_block)
     db.session.commit()
@@ -163,7 +162,8 @@ def search():
 @views.route('/search/<string:search>', methods = ['GET', 'POST'])
 @login_required
 def other_search(search):
-    user_db = User.query.filter(User.username.like('%'+search+'%')).all()
+    # uses wildcards to search for users with those characters
+    user_db = User.query.filter(User.username.like('%'+search+'%')).all()  
     if request.form.get('search'):
         search = request.form.get('search')
         return redirect("/search/" + search)
@@ -183,7 +183,6 @@ def settings():
         current_user.text_size = form.text_size.data
         current_user.background = form.background.data
 
-        # current_user.status = form.status.data
         db.session.commit()
 
         flash('Your settings were changed.', category = 'success')
@@ -191,23 +190,11 @@ def settings():
 
     
     elif request.method == 'GET':
-        # fills out the forms based on your current username and status
+        # fills out the forms based on your current settings
         form.text_color.data = current_user.text_color
         form.text_size.data = current_user.text_size
         form.background.data = current_user.background
 
-
-        # form.status.data = current_user.status
-
-
-    # if request.method == 'POST':  #if button is pressed
-    #     current_user.text_color = request.form.get('textColor')
-    #     current_user.text_size = request.form.get('textSize')
-    #     current_user.background = request.form.get('background')
-    #     db.session.commit()             
-
-        
-               
     return render_template("settings.html", User = User, user = current_user, username = current_user.username, form = form)
 
 
