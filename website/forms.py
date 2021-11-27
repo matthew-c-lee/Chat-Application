@@ -8,10 +8,18 @@ from .models import User
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password',
+    password1 = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
+
+    security_question = SelectField(u'Security Question', choices = [   'In what city were you born?', 
+                                                                        'What was the name of your favorite pet?', 
+                                                                        'What was the name of your first school?', 
+                                                                        'What was the make of your first car?', 
+                                                                        'What was your first job?'], validators = [DataRequired()])
+
+    submit = SubmitField('Create Account')
+    answer = StringField('Security Question Answer', validators=[DataRequired(), Length(min=2, max=20)])
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()

@@ -5,6 +5,7 @@ import re
 
 from .models import User
 from . import db
+from .forms import RegistrationForm
 
 auth = Blueprint('auth', __name__)
 
@@ -39,9 +40,9 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    form = RegistrationForm()
     if request.method == 'POST':
         username = request.form.get('username')
-        first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         answer = request.form.get('answer')
@@ -62,8 +63,6 @@ def sign_up():
             flash('Username can only contain "_", no other special characters', category='error')
         elif re.search(r"\s", username):
             flash('Username cannot contain any spaces.', category='error')
-        elif len(first_name) < 2:
-            flash('First name must be at least 2 characters.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         elif len(password1) < 5:
@@ -81,7 +80,7 @@ def sign_up():
         elif len(answer) < 1:
             flash('Security word must be at least 1 character', category='error')
         else:
-            new_user = User(username=username, first_name=first_name, password=generate_password_hash(password1, method='sha256'), 
+            new_user = User(username=username, password=generate_password_hash(password1, method='sha256'), 
                             answer=answer, question=question, text_size=text_size, text_color=text_color, background=background)
             db.session.add(new_user)
             db.session.commit()
@@ -91,7 +90,7 @@ def sign_up():
             flash('Account created.', category='success')
             return redirect(url_for('views.chat'))
 
-    return render_template("sign_up.html", user=current_user)
+    return render_template("sign_up.html", user=current_user, form = form)
 
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])
