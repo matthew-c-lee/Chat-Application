@@ -72,7 +72,7 @@ def other_profile(username):
             except:
                 return 'There was an issue updating your task'
 
-        return render_template('other_profile.html', user=user,image_file=image_file, current_user=current_user, and_=and_ , Block=Block)
+        return render_template('other_profile.html', user=user,image_file=image_file, current_user=current_user, and_=and_ , Block=Block, Friend=Friend)
 
 # Code for the Add Friend button
 @views.route('/add-friend/<string:user_id>/<string:search>', methods=['GET', 'POST'])
@@ -88,6 +88,20 @@ def add_friend(user_id, search):
         
         flash("You are now friends with " + user.username, category='success')
     return redirect("/search/" + search)
+
+@views.route('/remove-friend/<string:user_id>', methods=['GET', 'POST'])
+def remove_friend(user_id):
+
+    user = User.query.get(user_id)
+
+    #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id).first()
+    db.session.delete(old_friend)
+    db.session.commit()
+    
+    flash("You have unfriended " + user.username, category='success')
+
+    return redirect(url_for('views.chat'))
 
 # Deletes messages
 @views.route('/delete-message/<string:message_id>/<string:recipient_name>', methods=['GET', 'POST'])

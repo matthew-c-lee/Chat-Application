@@ -25,8 +25,13 @@
     <li style="height: 200px" class="list-group-item">
         <h6 align="center">Profile</h6>
         <h6 align="left">Current Status: {{user.status}}</h6>
-        {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == user.id)).first() %}
+        {% if current_user != user %}
+          {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == user.id)).first() %}
           <div><a style="float: right; padding-top: 6px" class="btn btn-secondary btn-sm" href="/add-block/{{user.id}}" >Block</a></div>
+          {% endif %}
+          {% if Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == user.id)).first() %}
+          <div align="right"><a class="btn btn-secondary btn-sm" href="/remove-friend/{{user.id}}" >Unfriend</a></div>
+          {% endif %}
         {% endif %}
           
 
