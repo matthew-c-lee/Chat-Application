@@ -35,13 +35,11 @@ def change_group_name(group_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
     form = UpdateGroupForm()
-
-    form = UpdateGroupForm()
     if form.validate_on_submit():
-        current_user.status = form.status.data
+        group.group_name = form.group_name.data
 
         db.session.commit()
-        flash('Your account has been updated!', 'success')
+        flash('Your group name has been changed!', 'success')
         return redirect('/')
     elif request.method == 'GET':
         form.group_name.data = group.group_name

@@ -6,7 +6,7 @@ from PIL import Image
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 
-from sqlalchemy import and_, desc
+from sqlalchemy import and_, desc, or_
 
 from .models import User, Message, Friend, Block
 from . import db
@@ -56,7 +56,7 @@ def profile():
     # grabs the image out of the profile pics folder
     image_file = url_for('static', filename = 'profile_pics/' + current_user.image_file)
     return render_template('profile.html', title = 'Account', image_file = image_file, form = form, 
-        user = current_user)
+        user = current_user, User = User)
 
 
 # profile of a specific user
@@ -204,7 +204,7 @@ def faq():
     return render_template("faq.html", user = current_user)
 
 
-# chat page before selecting a user or group
+# chat menu
 @views.route('/', methods = ['GET', 'POST'])
 @login_required
 def chat():
@@ -222,7 +222,7 @@ def chat():
     # Get their username
 
     return render_template("chat_menu.html", User = User, user = current_user, username = current_user.username, 
-        Message = Message, recipient = recipient, desc = desc, redirect = redirect)
+        Message = Message, recipient = recipient, desc = desc, redirect = redirect, and_=and_, or_=or_)
 
 
 # chat with a user selected
