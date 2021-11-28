@@ -222,7 +222,7 @@ def chat():
     # Get their username
 
     return render_template("chat_menu.html", User = User, user = current_user, username = current_user.username, 
-        Message = Message, recipient = recipient, desc = desc, redirect = redirect, and_=and_, or_=or_)
+        Message = Message, recipient = recipient, desc = desc, redirect = redirect, and_=and_, or_=or_, datetime=datetime)
 
 
 # chat with a user selected
