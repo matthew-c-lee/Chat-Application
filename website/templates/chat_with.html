@@ -2,7 +2,6 @@
     %}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <h2 align="center">Chat</h2>
 
     <br />
 
@@ -68,9 +67,9 @@
                     {% elif (message.date - datetime.datetime.now()).days == -1 %}
                         <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
                         <!-- if it was today, just show the time -->
-                {% else %}
-                    <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
-                {% endif %}
+                    {% else %}
+                        <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                    {% endif %}
             </div>
 
                 <div style="overflow-wrap: break-word; color: {{user.text_color}}; font-size: {{user.text_size}}" align="left">{{message.data}}</div>
@@ -90,7 +89,9 @@
         <div style="float: right">
             <!-- sending message with sound effect -->
             <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
-            <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();" >Send</button>
+
+            <!-- send button -->
+            <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();"><i style="padding-top:5px; width: 35px" class="material-icons">send</i></button>
         </div>
         
 

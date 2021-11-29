@@ -96,6 +96,20 @@ def add_friend(user_id, search):
         flash("You are now friends with " + user.username, category = 'success')
     return redirect("/search/" + search)
 
+@views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
+@login_required
+def add_friend_profile(user_id):
+    user = User.query.get(user_id)
+
+    # if the user exists
+    if user:
+        new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
+        db.session.add(new_friend)
+        db.session.commit()
+        
+        flash("You are now friends with " + user.username, category = 'success')
+    return redirect('/')
+
 
 # Deletes messages
 @views.route('/delete-message/<string:message_id>/<string:recipient_name>', methods = ['GET', 'POST'])
@@ -140,6 +154,20 @@ def remove_block(user_id):
     db.session.commit()
     
     flash("You have unblocked " + user.username, category = 'success')
+
+    return redirect(url_for('views.chat'))
+
+@views.route('/remove-friend/<string:user_id>', methods=['GET', 'POST'])
+def remove_friend(user_id):
+
+    user = User.query.get(user_id)
+
+    #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id).first()
+    db.session.delete(old_friend)
+    db.session.commit()
+    
+    flash("You have unfriended " + user.username, category='success')
 
     return redirect(url_for('views.chat'))
 

@@ -97,6 +97,9 @@ def sign_up():
 
     return render_template("sign_up.html", user = current_user, form = form)
 
+def test_sign_up():
+    assert 4 == 4
+
 
 
 

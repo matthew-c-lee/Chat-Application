@@ -18,17 +18,26 @@
         <p class="text-secondary">{{ current_user.status }}</p>
       {% endif %}
     </div>
-    
+
+    <!-- if they're NOT blocked -->
     {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == user.id)).first() %}
     <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/add-block/{{user.id}}">Block</a></div>
+
+    <!-- checks if they're your friend -->
+    {% if Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == user.id)).first() %}
+    <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/remove-friend/{{user.id}}">Unfriend</a></div>
+  
+    <!-- if they're NOT your friend: -->
+    {% else %}
+      <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/add-friend/{{user.id}}">Add Friend</a></div>
+    {% endif %}
+
+    <!-- if they ARE blocked -->
     {% else %}
     <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/remove-block/{{user.id}}">Unblock</a></div>
     {% endif %}
 
-    <!-- checks if they're your friend -->
-    {% if Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == user.id)).first() %}
-      <!-- they're your friend -->
-    {% endif %}
+
 
   </div>
 
