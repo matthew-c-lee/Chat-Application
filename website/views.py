@@ -95,7 +95,7 @@ def remove_friend(user_id):
     user = User.query.get(user_id)
 
     #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
-    old_friend = Friend.query.filter(Friend.user_id == current_user.id).first()
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
     db.session.delete(old_friend)
     db.session.commit()
     
@@ -128,7 +128,7 @@ def add_block(user_id):
     #    db.session.commit()
 
     new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
-    old_friend = Friend.query.filter(Friend.user_id == current_user.id).first()
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
     db.session.add(new_block)
     db.session.commit()
 
@@ -147,7 +147,7 @@ def remove_block(user_id):
     user = User.query.get(user_id)
 
     #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
-    old_block = Block.query.filter(Block.user_id == current_user.id).first()
+    old_block = Block.query.filter(Block.user_id == current_user.id, Block.blocked_id==user.id, Block.blocked_name==user.username).first()
     db.session.delete(old_block)
     db.session.commit()
     
