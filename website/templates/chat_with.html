@@ -1,0 +1,114 @@
+{% extends "base.html" %} {% block title %}Chat{% endblock %} {% block content
+    %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <br />
+
+
+<!-- Chat Box -->
+{% if recipient %}
+<div style =   "position: fixed;
+                right: 0;
+                left: 0;
+                margin-right: auto;
+                margin-left: auto;
+                min-height: 10em;
+                max-width: 550px;">
+    <ul class="list-group list-group-flush" id="messages">
+        <div>        
+        <!-- Back Button - brings back to chat menu -->
+        <div style="float: left"><a style="width: 60px" class="btn btn-danger" id="chat" href="/"><i class="fa fa-arrow-left"></i></a></div>
+        <h5 align="center" style="padding-right: 60px">{{recipient.username}}</h5>
+        <!-- <a style="float: left; width: 120px" class="btn btn-danger" id="chat" href="/"><i class="fa fa-arrow-left"></i></a> -->
+        </div>
+    
+    </br>
+
+            <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
+            {% for message in Message.query.order_by(desc(Message.id)).all() %}
+            <!-- Your messages -->
+            {% if message.user_id == user.id and message.recipient_id == recipient.id %} 
+                <li style="background-color: {{user.background}}" class="list-group-item">
+                    
+                    <div style="height:30px">
+                        <a href="/profile">
+
+                            <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
+                            <div style="float: right; color:black"><h6>{{ current_user.username }}</h6>
+                    </div>
+    
+                        </a>
+                    <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message/{{message.id}}/{{recipient.username}}"><span aria-hidden="true">&times;</span></a></div>
+                        
+                    <!-- if the message is old, show full date and time -->
+                    {% if (message.date - datetime.datetime.now()).days < 0 %}
+                    <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%b %d, %I:%M %p')}}</small></div>
+                    <!-- if it was only yesterday -->
+                    {% elif (message.date - datetime.datetime.now()).days == -1 %}
+                        <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
+                        <!-- if it was today, just show the time -->
+                    {% else %}
+                        <div style="float:left; padding-left: 10px"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                    {% endif %}
+                </div>
+
+                <div style="overflow-wrap: break-word; color: {{user.text_color}}; font-size: {{user.text_size}}" align="right">{{message.data}}</div>
+                
+                </li>
+            {% endif %}
+
+            <!-- other person's messages -->
+            {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
+                <li style="background-color: {{user.background}}" class="list-group-item">
+                    <div style="height:30px">
+
+
+                        <a href="/profile/{{recipient.username}}">
+
+                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + recipient.image_file) }}"></div>
+                        <div style="float: left; color: black"><h6>{{ recipient.username }}</h6></div>
+                        
+                        </a>
+
+                    <!-- if the message is old, show full date and time -->
+                    {% if (message.date - datetime.datetime.now()).days < 0 %}
+                    <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%b %d, %I:%M %p')}}</small></div>
+                    <!-- if it was only yesterday -->
+                    {% elif (message.date - datetime.datetime.now()).days == -1 %}
+                        <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('Yesterday, %I:%M %p')}}</small></div>
+                        <!-- if it was today, just show the time -->
+                    {% else %}
+                        <div style="float:right"><small>{{(message.date - datetime.timedelta(hours=5)).strftime('%I:%M %p')}}</small></div>
+                    {% endif %}
+            </div>
+
+                <div style="overflow-wrap: break-word; color: {{user.text_color}}; font-size: {{user.text_size}}" align="left">{{message.data}}</div>
+                
+                </li>
+            {% endif %}
+            
+        {% endfor %}
+        </div>
+    </ul>
+    <form method="POST">
+        <textarea name="message" id="message" class="form-control"></textarea>
+        <br /> 
+        
+        <!-- <textarea name="message" id="message" class="form-control"></textarea> -->
+        <!--send message with audio effect-->
+        <div style="float: right">
+            <!-- sending message with sound effect -->
+            <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
+
+            <!-- send button -->
+            <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();"><i style="padding-top:5px; width: 35px" class="material-icons">send</i></button>
+        </div>
+        
+
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
+    

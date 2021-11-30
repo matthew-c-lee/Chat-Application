@@ -12,104 +12,135 @@ content %}
 
 </head>
 <body>
-<form method="POST">
+
+
+
+<form method="POST" action="" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+
   <h2 align="center">Sign Up</h2>
   <p align = "center">Already have an account? <a href = "login" style="text-decoration: none;">Sign in!</a></p>
-  <div class="d-grid gap-2 col-6 mx-auto">
-  <div class="form-floating">
-    
-    <input
-      type="text"
-      class="form-control"
-      id="username"
-      name="username"
-      placeholder="Enter Username"
-      required
-    />
-    <label for="username" style="font-size:large;" class = "bi bi-person"> Username</label>
-  </div>
 
-  <div class="form-floating">
-    
-    <input
-      type="text"
-      class="form-control"
-      id="firstName"
-      name="firstName"
-      placeholder="Enter First Name"
-    />
-    <label for="firstName" style="font-size:large;">First Name</label>
-  </div>
+<div class="d-grid gap-2 col-6 mx-auto">
+      
+      <div class="form-floating">
+          {% if form.username.errors %}
+              {{ form.username(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in form.username.errors %}
+                      <span>{{ error }}</span>
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ form.username(
+                    class="form-control form-control-lg",
+                    type="text",
+                    id="username",
+                    style="font-size: medium",
+                    placeholder="Enter Username")
+              }}
+          {% endif %}
+          <label for="username" style="font-size:large;" class = "bi bi-person"> Username</label>
+      </div>
 
-  
+      <div class="form-floating">
+          {% if form.password1.errors %}
+              {{ form.password1(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in form.password1.errors %}
+                      <span>{{ error }}</span>
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ form.password1(
+                    class="form-control form-control-lg",
+                    type="password",
+                    id="password1",
+                    style="font-size: medium",
+                    placeholder="Choose Password")
+              }}               
+          {% endif %}
+        <label for="password1" style="font-size:large;" class = "bi bi-lock"> Password</label>
+      </div>
 
-  <div class="form-floating">
-    <input
-      type="password"
-      class="form-control"
-      id="password1"
-      name="password1"
-      placeholder="Enter Password"
-      required
-    />
-    <label for="password1" style="font-size:large;" class = "bi bi-lock"> Password</label>
-    
+      <div>
 
-  </div>
+<div class="form-floating">
+  {% if form.password2.errors %}
+      {{ form.password2(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in form.password2.errors %}
+              <span>{{ error }}</span>
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ form.password2(
+            class="form-control form-control-lg",
+            type="password",
+            id="password2",
+            style="font-size: medium",
+            placeholder="Choose Password")
+      }}               
+  {% endif %}
+  <label for="password2" style="font-size:large;" class = "bi bi-lock"> Confirm Password</label>
 
-  <div class="form-floating">
-    
-    <input
-      type="password"
-      class="form-control"
-      id="password2"
-      name="password2"
-      placeholder="Confirm Password"
-      required
-    />
-    <label for="password2" style="font-size:large;" class = "bi bi-lock"> Confirm Password</label>
+</div>
+</div>
+  <a onClick = "showHidePassword();" href ="#" style="text-align: right; text-decoration:none;" id = "show-hide"><i class = "bi bi-eye" id="show_eye"></i><i>Show</i></a>
 
-  </div>
-  </div>
-  <div class="d-grid gap-2 col-6 mx-auto">
-    <a onClick = "showHidePassword();" href ="#" style="text-align: right; text-decoration:none;" id = "show-hide"><i class = "bi bi-eye" id="show_eye"></i><i>Show</i></a>
-  
-
-<div class = "form-floating">
-  <select class="form-select" title="question" type='text' name='question' id='question' required>
-    <option value="">Choose security question</option>
-    <option value="In what city were you born?">In what city were you born?</option>
-    <option value="What is the name of your favorite pet?" >What is the name of your favorite pet?</option>
-    <option value="What is the name of your first school?" >What is the name of your first school?</option>
-    <option value="What was the make of your first car?" >What was the make of your first car?</option>
-    <option value="What was your first job?" >What was your first job?</option>
-  </select>
-<label for="question" style="font-size:large;" class="bi bi-question-circle"> Security Question</label>
+<div class="form-floating">
+  {% if form.security_question.errors %}
+      {{ form.security_question(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in form.security_question.errors %}
+              <span>{{ error }}</span>
+          {% endfor %}
+      </div>
+  {% else %}
+    {{ form.security_question(
+          class="form-select form-control-lg",
+          type="text",
+          id="security_question",
+          style="font-size: small",
+          placeholder="Choose Security Question")
+    }}        
+  {% endif %}
+  <label for="question" style="font-size:large;" class="bi bi-question-circle"> Security Question</label>
 </div>
 
+<div class="form-floating">
+  {% if form.answer.errors %}
+      {{ form.username(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in form.answer.errors %}
+              <span>{{ error }}</span>
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ form.answer(
+            class="form-control form-control-lg",
+            type="text",
+            id="answer",
+            style="font-size: medium",
+            placeholder="Choose Password")
+      }}               
+  {% endif %}
+  <label for="answer" style="font-size:large;" class = "bi bi-lock"> Security Question Answer</label>
+</div>
 
-  <div class="form-floating">
-    <input
-      type="text"
-      class="form-control"
-      id="answer"
-      name="answer"
-      placeholder="Write your answer"
-      required
-    />
-    <label for="answer" style="font-size:large;">Security Question Answer</label>
-  </div>
-
-
-  <p style="color:red"><strong>Warning!</strong> <br>
+<p style="color:red"><strong>Warning!</strong> <br>
   Write down your username, password, and security question answer. If forgotten, the account will be inaccessible.</p>
   
 
-  <br />
 </div>
 <div class="d-grid gap-2 col-4 mx-auto">
-  <button type="submit" class="btn btn-primary btn-lg" style="font-weight:bold;">Create Account</button>
+  <div align="center">
+  {{ form.submit(class="btn btn-primary btn-lg", style="font-weight:bold; width: 200px;") }}
+  </div>
 </div>
+</div>
+</form>
+
 </div>
 
 </form>

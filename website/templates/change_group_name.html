@@ -1,19 +1,28 @@
-{% extends "base.html" %} {% block title %}Create Group{% endblock %} {% block content
-    %}
-    <form method="POST">
-      <h2 align="center">Change Group Name</h2>
-      <br />
-          <div class="form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="group-name"
-              name="group-name"
-              placeholder="New Group Name"
-            />
-          </div>
-      <div style="float: right;"><button type="submit" class="btn btn-primary">Update</button></div>
+{% extends "base.html" %}
+{% block content %}
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Edit Group</legend>
 
-    </form>
-    {% endblock %}
-    
+                <div class="form-group">
+                    {{ form.group_name.label(class="form-control-label") }}
+
+                    {% if form.group_name.errors %}
+                        {{ form.group_name(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.group_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.group_name(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}
