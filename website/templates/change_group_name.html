@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    .bg-dark {
+        background-color: #212529!important;
+    }
+</style>
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
