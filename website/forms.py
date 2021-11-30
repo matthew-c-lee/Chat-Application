@@ -29,7 +29,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('That username is taken. Please choose a different one.')
         if not(re.match(r'^\w+$', username.data)):
             raise ValidationError('Username can only contain "_", no other special characters.')
-        if re.search(r"\s", username):
+        if re.search(r"\s", username.data):
             raise ValidationError('Username cannot contain any spaces.')
 
     def validate_password1(self, password1):
@@ -43,9 +43,6 @@ class RegistrationForm(FlaskForm):
             raise ValidationError(password_requirements)
         if re.search(r"\s", password1.data):
             raise ValidationError('Password must not contain any spaces.')
-
-
-
 
 class SettingsForm(FlaskForm):
     text_color = SelectField(u'Text Color', choices = ['Black', 'Blue', 'Green', 'Red', 'Orange'], validators = [DataRequired()])

@@ -16,6 +16,8 @@ content %}
 
 
 <form method="POST" action="" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+
   <h2 align="center">Sign Up</h2>
   <p align = "center">Already have an account? <a href = "login" style="text-decoration: none;">Sign in!</a></p>
 
