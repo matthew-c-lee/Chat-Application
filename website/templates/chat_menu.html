@@ -23,9 +23,6 @@
                         {% set friend_data = User.query.filter(User.id == friend.friend_id).first_or_404() %}
 
                     <a href="/profile/{{friend_data.username}}">
-                    
-                    
-
                     <!-- profile picture -->
                         <img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + friend_data.image_file) }}"></a>
                     </div>

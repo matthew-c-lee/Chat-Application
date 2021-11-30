@@ -82,7 +82,7 @@ def group_chat(group_id):
 def add_members(group_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
-    return render_template("add_members.html", user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
+    return render_template("add_members.html", User = User, user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
 
 @group_views.route('/add-member/<string:group_id>/<string:member_id>', methods=['GET', 'POST'])
 def add_member(group_id, member_id):

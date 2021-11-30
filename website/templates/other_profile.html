@@ -14,8 +14,8 @@
 
     <div style="padding-left: 20px" class="media-body">
       <h2 class="account-heading">{{ user.username }}</h2>
-      {% if current_user.status %}
-        <p class="text-secondary">{{ current_user.status }}</p>
+      {% if user.status %}
+        <p class="text-secondary">{{ user.status }}</p>
       {% endif %}
     </div>
 
