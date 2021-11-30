@@ -1,45 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-  #profilepic {
-      object-fit: cover;
-      width:130px;
-      height:130px;
-  }
-</style>
-
 <div class="content-section">
   <div class="media">
-    <img id=profilepic style="width:130px" class="rounded-circle account-img" src="{{ image_file }}">
-
+    <div align="center"><img style="width:130px" class="rounded-circle account-img" src="{{ image_file }}"></div>
     <div style="padding-left: 20px" class="media-body">
       <h2 class="account-heading">{{ user.username }}</h2>
-      {% if user.status %}
-        <p class="text-secondary">{{ user.status }}</p>
-      {% endif %}
+      <p class="text-secondary">{{ user.status }}</p>
     </div>
-
-    <!-- if they're NOT blocked -->
-    {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == user.id)).first() %}
-    <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/add-block/{{user.id}}">Block</a></div>
-
-    <!-- checks if they're your friend -->
-    {% if Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == user.id)).first() %}
-    <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/remove-friend/{{user.id}}">Unfriend</a></div>
-  
-    <!-- if they're NOT your friend: -->
-    {% else %}
-      <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/add-friend/{{user.id}}">Add Friend</a></div>
-    {% endif %}
-
-    <!-- if they ARE blocked -->
-    {% else %}
-    <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/remove-block/{{user.id}}">Unblock</a></div>
-    {% endif %}
-
-
-
   </div>
 
-    {% endblock %}
+    
+{% endblock %}
     

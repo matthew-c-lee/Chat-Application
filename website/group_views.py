@@ -1,13 +1,13 @@
-import datetime
-
-from flask import Blueprint, render_template, request, flash, redirect
+from pytz import timezone
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-
-from sqlalchemy import and_, desc
-
+from .models import User, Message, Friend, Group, user_groups
 from . import db
-from .models import User, Message, Group, user_groups
-from .forms import UpdateGroupForm
+import json
+from sqlalchemy import and_, desc
+import secrets
+import os
+import datetime
 
 group_views = Blueprint('group_views', __name__)
 
@@ -29,23 +29,21 @@ def create_group():
 
     return render_template("create_group.html", user=current_user)
 
-
 @group_views.route('/change-group-name/<string:group_id>', methods=['GET', 'POST'])
 def change_group_name(group_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
-    form = UpdateGroupForm()
-    if form.validate_on_submit():
-        group.group_name = form.group_name.data
+    if request.method == 'POST':
+        new_name = request.form.get('group-name')
+        
+        if len(new_name) > 0:
+            group.group_name = new_name
+            db.session.commit()
 
-        db.session.commit()
-        flash('Your group name has been changed!', 'success')
-        return redirect('/')
-    elif request.method == 'GET':
-        form.group_name.data = group.group_name
+        # flash("Created " + group_name)
+        return redirect('/group-chat/' + str(group.group_id))
 
-    return render_template("change_group_name.html", form=form)
-
+    return render_template("change_group_name.html", user=current_user)
 
 # the actual group chat
 @group_views.route('/group-chat/<string:group_id>', methods=['GET', 'POST'])
@@ -82,7 +80,7 @@ def group_chat(group_id):
 def add_members(group_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
 
-    return render_template("add_members.html", User = User, user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
+    return render_template("add_members.html", user=current_user, group=group, db=db, user_groups=user_groups, and_=and_)
 
 @group_views.route('/add-member/<string:group_id>/<string:member_id>', methods=['GET', 'POST'])
 def add_member(group_id, member_id):

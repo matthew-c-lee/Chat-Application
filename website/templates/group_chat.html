@@ -1,27 +1,14 @@
 {% extends "base.html" %} {% block title %}Chat{% endblock %} {% block content
     %}
-<br />
+    <h2 align="center">Chat</h2>
 
-
-<!-- Chat Box -->
-<div style =   "position: fixed;
-                right: 0;
-                left: 0;
-                margin-right: auto;
-                margin-left: auto;
-                min-height: 10em;
-                max-width: 550px;">
-
-        <ul class="list-group list-group-flush" id="messages">
-            <div>        
-                <!-- Back Button - brings back to chat menu -->
-                <div style="float: left"><a style="width: 60px" class="btn btn-danger" id="chat" href="/"><i class="fa fa-arrow-left"></i></a></div>
-                <h5 align="center" style="padding-right: 60px">{{group.group_name}}</h5>
-                <!-- <a style="float: left; width: 120px" class="btn btn-danger" id="chat" href="/"><i class="fa fa-arrow-left"></i></a> -->
-            </div>
-        </br>
-
-        
+    <!-- Chat Box -->
+<div style="float: right; width: 55%; padding-right: 2%; padding-top: 1.5%;">
+    <ul class="list-group list-group-flush" id="messages">
+    <!-- {% if selected_friend: %} -->
+        <li class="list-group-item"></li>
+    <!-- {% endif %} -->
+        <h5 align="center">{{group.group_name}}</h5>
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
         <!-- <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px"> -->
             
@@ -29,17 +16,10 @@
             <!-- Your messages -->
             {% if message.group_id == group.group_id %}
                 {% if message.user_id == user.id %}
-                <li style="background-color: {{user.background}}" class="list-group-item">
+                <li class="list-group-item">
                     <div style="height:30px">
-
-                        <!-- your picture -->
-                        <a href="/profile">
-
-
-                        <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
-                        <div style="float: right; color:black"><h6>{{ current_user.username }}</h6></div>
-
-                        </a>
+                        <div style="float: right; padding-left: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
+                        <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                         <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message-group/{{message.id}}/{{group.group_id}}"><span aria-hidden="true">&times;</span></a></div>
                     
                             <!-- if the message is old, show full date and time -->
@@ -54,23 +34,14 @@
                             {% endif %}
                         </div>
 
-                        <div style="overflow-wrap: break-word; color: {{user.text_color}}; font-size: {{user.text_size}}" align="right">{{message.data}}</div>
+                        <div style="overflow-wrap: break-word" align="left">{{message.data}}</div>
                 
                 </li>
                 {% else %}
-                <li style="background-color: {{user.background}}" class="list-group-item">
+                <li class="list-group-item">
                     <div style="height:30px">
-
-                        <!-- their picture -->
-                        {% set member_data = User.query.filter(User.id == message.user_id).first_or_404() %}
-
-                        <a href="/profile/{{member_data.username}}">
-
-                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + member_data.image_file) }}"></div>
-                        <div style="float: left; color: black"><h6>{{ member_data.username }}</h6></div>
-                        
-                        </a>
-
+                        <div style="float: left; padding-right: 10px"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
+                        <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
                     
                         <!-- if the message is old, show full date and time -->
                         {% if (message.date - datetime.datetime.now()).days < 0 %}
@@ -84,7 +55,7 @@
                         {% endif %}
                     </div>
 
-                    <div style="overflow-wrap: break-word; color: {{user.text_color}}; font-size: {{user.text_size}}" align="left">{{message.data}}</div>
+                    <div style="overflow-wrap: break-word" align="left">{{message.data}}</div>
                 </li>
                 {% endif %}
             {% endif %}
@@ -97,10 +68,8 @@
         <textarea name="message" id="message" class="form-control"></textarea>
         <br /> 
         <div style="float: right">
-            <!-- Send Button  with audio effect-->
-            <audio id="sound_send" src="/static/audio/send.wav" preload="auto"></audio>
-            <button type="submit" class="btn btn-primary" onclick="document.getElementById('sound_send').play();"><i style="padding-top:5px; width: 35px" class="material-icons">send</i></button>
-            
+            <button type="submit" class="btn btn-primary">Send</button>
+            <!-- Send Button -->
             <!-- <a class="btn btn-primary" id="send" href="/send-chat/{{group.group_name}}/{{message}}">Send</a> -->
         </div>
     </form>
@@ -110,6 +79,37 @@
 </div>
     
 <br />
+
+<!-- Friend's List -->
+<div style="float: left; width: 40%; padding-left: 0%">
+    <li style="height: 70px" class="list-group-item"><h4 align="center">Friends List</h4></li>
+    {% if user.friends_list %}
+        {% for friend in user.friends_list %}
+            <li class="list-group-item">
+                <div style="float: left"><img style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == friend.friend_id).first_or_404().image_file) }}"></div>
+                <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}</a></div>
+                <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/chat/{{User.query.filter(User.id == friend.friend_id).first_or_404().username}}">Chat</a></div>
+            </li>
+        {% endfor %}
+    {% endif %}
+    
+    {% if user.groups %}
+    <li class="list-group-item"><h4 align="center">Group Chats</h4></li>
+        {% for group in user.groups %}
+            <li class="list-group-item">
+                <a class="btn btn-dark btn-sm" id="chat" href="/group-chat/{{group.group_id}}">{{group.group_name}}</a>
+
+                <!-- edit group name -->
+                <div style="float: right; width: 5%"><a class="close" id="chat" href="/change-group-name/{{group.group_id}}"><span aria-hidden="true"><i class="material-icons">mode_edit</i></span></a></div>
+                
+
+
+            </li>
+        {% endfor %}
+    {% endif %}
+
+    <div style="float: right; padding-top: 3%"><a class="btn btn-outline-primary btn-sm" id="create-group" href="/create-group">New Group</a></div>
+</div>
 
 {% endblock %}
     
