@@ -63,12 +63,14 @@ class UpdateAccountForm(FlaskForm):
     submit = SubmitField('Update')
     status = StringField('Status', validators=[Length(max=80)])
 
-
     def validate_username(self, username):
-        if username.data != current_user.username:
-            user = User.query.filter_by(username=username.data).first()
-            if user:
-                raise ValidationError('That username is taken. Please choose a different one.')
+        user = User.query.filter(User.username == username.data).first()
+        if user and user != current_user:
+            raise ValidationError('That username is taken. Please choose a different one.')
+        if not(re.match(r'^\w+$', username.data)):
+            raise ValidationError('Username can only contain "_", no other special characters.')
+        if re.search(r"\s", username.data):
+            raise ValidationError('Username cannot contain any spaces.')
 
 class UpdateGroupForm(FlaskForm):
     submit = SubmitField('Update')
