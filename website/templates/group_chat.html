@@ -1,7 +1,5 @@
 {% extends "base.html" %} {% block title %}Chat{% endblock %} {% block content
     %}
-    <h2 align="center">Chat</h2>
-
 <br />
 
 
@@ -21,6 +19,8 @@
                 <h5 align="center" style="padding-right: 60px">{{group.group_name}}</h5>
                 <!-- <a style="float: left; width: 120px" class="btn btn-danger" id="chat" href="/"><i class="fa fa-arrow-left"></i></a> -->
             </div>
+        </br>
+
         
         <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px; display: flex; flex-direction: column-reverse;">
         <!-- <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light;" style="max-height: 300px"> -->
@@ -31,8 +31,15 @@
                 {% if message.user_id == user.id %}
                 <li style="background-color: {{user.background}}" class="list-group-item">
                     <div style="height:30px">
+
+                        <!-- your picture -->
+                        <a href="/profile">
+
+
                         <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
-                        <div style="float: right"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
+                        <div style="float: right; color:black"><h6>{{ current_user.username }}</h6></div>
+
+                        </a>
                         <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message-group/{{message.id}}/{{group.group_id}}"><span aria-hidden="true">&times;</span></a></div>
                     
                             <!-- if the message is old, show full date and time -->
@@ -53,8 +60,17 @@
                 {% else %}
                 <li style="background-color: {{user.background}}" class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
-                        <div style="float: left"><h6>{{ user_db.query.filter(user_db.id == message.user_id).first_or_404().username }}</h6></div>
+
+                        <!-- their picture -->
+                        {% set member_data = User.query.filter(User.id == message.user_id).first_or_404() %}
+
+                        <a href="/profile/{{member_data.username}}">
+
+                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + member_data.image_file) }}"></div>
+                        <div style="float: left; color: black"><h6>{{ member_data.username }}</h6></div>
+                        
+                        </a>
+
                     
                         <!-- if the message is old, show full date and time -->
                         {% if (message.date - datetime.datetime.now()).days < 0 %}

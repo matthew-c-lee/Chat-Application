@@ -32,9 +32,14 @@
                 <li style="background-color: {{user.background}}" class="list-group-item">
                     
                     <div style="height:30px">
-                        <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
-                        <div style="float: right"><h6>{{username}}</h6></div>
-                        <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message/{{message.id}}/{{recipient.username}}"><span aria-hidden="true">&times;</span></a></div>
+                        <a href="/profile">
+
+                            <div style="float: right; padding-left: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"></div>
+                            <div style="float: right; color:black"><h6>{{ current_user.username }}</h6>
+                    </div>
+    
+                        </a>
+                    <div style="float: left; width: 5%"><a class="close" id="chat" href="/delete-message/{{message.id}}/{{recipient.username}}"><span aria-hidden="true">&times;</span></a></div>
                         
                     <!-- if the message is old, show full date and time -->
                     {% if (message.date - datetime.datetime.now()).days < 0 %}
@@ -57,8 +62,14 @@
             {% if message.user_id == recipient.id and message.recipient_id == user.id %} 
                 <li style="background-color: {{user.background}}" class="list-group-item">
                     <div style="height:30px">
-                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == message.user_id).first_or_404().image_file) }}"></div>
-                        <div style="float: left"><h6>{{recipient.username}}</h6></div>
+
+
+                        <a href="/profile/{{recipient.username}}">
+
+                        <div style="float: left; padding-right: 10px"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + recipient.image_file) }}"></div>
+                        <div style="float: left; color: black"><h6>{{ recipient.username }}</h6></div>
+                        
+                        </a>
 
                     <!-- if the message is old, show full date and time -->
                     {% if (message.date - datetime.datetime.now()).days < 0 %}
