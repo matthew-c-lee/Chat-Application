@@ -8,7 +8,7 @@ from flask_login import login_required, current_user
 
 from sqlalchemy import and_, desc, or_
 
-from .models import User, Message, Friend, Block
+from .models import User, Message, Friend, Block, Request
 from . import db
 from .forms import UpdateAccountForm, SettingsForm
 
@@ -56,7 +56,7 @@ def profile():
     # grabs the image out of the profile pics folder
     image_file = url_for('static', filename = 'profile_pics/' + current_user.image_file)
     return render_template('profile.html', title = 'Account', image_file = image_file, form = form, 
-        user = current_user, User = User)
+        user = current_user, User = User, Request = Request)
 
 
 # profile of a specific user
@@ -94,6 +94,20 @@ def add_friend(user_id, search):
         db.session.commit()
         
         flash("You are now friends with " + user.username, category = 'success')
+    return redirect("/search/" + search)
+
+@views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
+@login_required
+def request_friend(user_id, search):
+    user = User.query.get(user_id)
+
+    # if the user exists
+    if user:
+        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
+        db.session.add(new_request)
+        db.session.commit()
+        
+        flash("You have sent a friend request to " + user.username, category = 'success')
     return redirect("/search/" + search)
 
 @views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
@@ -183,7 +197,7 @@ def search():
         return redirect("/search/" + search)
 
     return render_template("search.html", user = current_user, current_user = current_user, user_db = user_db, 
-        search = search, Friend = Friend, and_ = and_, Block = Block)
+        search = search, Friend = Friend, and_ = and_, Block = Block, Request = Request)
 
 
 # search with query
@@ -198,7 +212,7 @@ def other_search(search):
 
 
     return render_template("search.html", user = current_user, current_user = current_user, user_db = user_db, 
-        search = search, Friend = Friend, and_ = and_, Block = Block)
+        search = search, Friend = Friend, and_ = and_, Block = Block, Request = Request)
 
 
 # settings page
