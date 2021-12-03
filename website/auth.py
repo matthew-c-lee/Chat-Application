@@ -110,61 +110,57 @@ def sign_up():
 
     return render_template("sign_up.html", user = current_user, form = form)
 
-@auth.route('/forgot-password', methods = ['GET', 'POST'])
+@auth.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
         username = request.form.get('username')
-        answer = request.form.get('answer')
+        answer = request.form.get('security_answer')
 
-        user = User.query.filter_by(username = username).first()
+        user = User.query.filter_by(username=username).first()
                   
         if user and not answer:
-            return render_template("forgot_password_accept.html", user = current_user, username = user.username, question = user.question)
+            return render_template("forgot_password_accept.html", user=current_user, username=user.username, question=user.question)
         elif user and (user.answer.lower() == answer.lower()):
-            return redirect(url_for('auth.password_reset', user = current_user, username = user.username))
+            return redirect(url_for('auth.password_reset', user=current_user, username=user.username))
         else:
-            flash('The user does not exist or your security word is incorrect.', category = 'error')
-            
+            flash('The user does not exist or your security word is incorrect.', category='error')
 
-
-    return render_template("forgot_password.html", user = current_user)
+    return render_template("forgot_password.html", user=current_user)
 
 
     
 
-@auth.route('/password-reset', methods = ['GET', 'POST'])
+@auth.route('/password-reset', methods=['GET', 'POST'])
 def password_reset():
     if request.method == 'POST':
         username = request.form.get('username')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         
-        user = User.query.filter_by(username = username).first()
 
-        print(username)
-        print(user.text_size)
+        user = User.query.filter_by(username=username).first()
         
         if not user:
-            flash('Write down your original username', category = 'error')
+            flash('Write down your original username', category='error')
         elif len(password1) < 7:
-            flash('Password must be at least 7 characters.', category = 'error')
+            flash('Password must be at least 7 characters.', category='error')
         elif len(password1) < 5:
-            flash('Password must be at least 5 characters.', category = 'error')
+            flash('Password must be at least 5 characters.', category='error')
         elif not(re.search('[a-zA-Z]', password1)):
-            flash('Password must contain at least one letter.', category = 'error')
+            flash('Password must contain at least one letter.', category='error')
         elif not(any(map(str.isdigit, password1))):
-            flash('Password must contain at least one number.', category = 'error')
+            flash('Password must contain at least one number.', category='error')
         elif password1.isalnum():
-            flash('Password must contain at least one special character.', category = 'error')
+            flash('Password must contain at least one special character.', category='error')
         elif re.search(r"\s", password1):
-            flash('Password must not contain any spaces.', category = 'error')
-        elif password1 !=  password2:
-            flash('Passwords do not match.', category = 'error')
+            flash('Password must not contain any spaces.', category='error')
+        elif password1 != password2:
+            flash('Passwords do not match.', category='error')
         else:
-            user.password = generate_password_hash(password1, method = 'sha256')
+            user.password=generate_password_hash(password1, method='sha256')
             db.session.commit()
-            flash('Password was reset successfully.', category = 'success')
+            flash('Password was reset successfully.', category='success')
             return redirect(url_for('views.chat'))
 
-    return render_template("password_reset.html", user = current_user)   
+    return render_template("password_reset.html", user=current_user)   
     
