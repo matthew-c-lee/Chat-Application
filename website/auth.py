@@ -80,7 +80,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         answer = request.form.get('answer')
-        question = request.form.get('question')
+        question = request.form.get('security_question')
         text_color = 'black'
         text_size = '15px'
         background = 'white'
@@ -124,6 +124,8 @@ def forgot_password():
             return redirect(url_for('auth.password_reset', user = current_user, username = user.username))
         else:
             flash('The user does not exist or your security word is incorrect.', category = 'error')
+            
+
 
     return render_template("forgot_password.html", user = current_user)
 
