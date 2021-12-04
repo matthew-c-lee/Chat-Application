@@ -165,13 +165,20 @@ def add_block(user_id):
 
     user = User.query.get(user_id)
 
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id == user.id).first()
+    user_friend = Friend.query.filter(Friend.user_id == user_id, Friend.friend_id == current_user.id).first()
+
+    # old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
+
+    user = User.query.get(user_id)
+
     new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
-    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
     db.session.add(new_block)
     db.session.commit()
 
     if old_friend:
         db.session.delete(old_friend)
+        db.session.delete(user_friend)
         db.session.commit()
 
 
@@ -211,9 +218,14 @@ def remove_friend(user_id):
 
     user = User.query.get(user_id)
 
-    #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
-    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
+    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id == user.id).first()
+    user_friend = Friend.query.filter(Friend.user_id == user_id, Friend.friend_id == current_user.id).first()
+
+
+    # old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
     db.session.delete(old_friend)
+    db.session.delete(user_friend)
+
     db.session.commit()
     
     flash("You have unfriended " + user.username, category='success')
