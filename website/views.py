@@ -78,13 +78,13 @@ def other_profile(username):
                 return 'There was an issue updating your task'
 
         return render_template('other_profile.html', Friend = Friend, user = user, image_file = image_file, 
-            current_user = current_user, and_ = and_ , Block = Block)
+            current_user = current_user, and_ = and_ , Block = Block, Request = Request)
 
 
 # Code for the Add Friend button
-@views.route('/add-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
+@views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
-def add_friend(user_id, search):
+def add_friend(user_id):
     user = User.query.get(user_id)
 
     # if the user exists
@@ -92,18 +92,17 @@ def add_friend(user_id, search):
         new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
         user_friend = Friend(user_id = user.id, friend_id = current_user.id, friend_name = current_user.username)
         old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
-
+        db.session.delete(old_request)
+        db.session.commit()
         db.session.add(new_friend)
         db.session.commit()
         db.session.add(user_friend)
         db.session.commit()
-        db.session.delete(old_request)
-        db.session.commit()
         
-      
+    
         
         flash("You are now friends with " + user.username, category = 'success')
-    return redirect("/search/" + search)
+    return redirect(url_for('views.chat'))
 
 @views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
 @login_required
@@ -118,6 +117,20 @@ def request_friend(user_id, search):
         
         flash("You have sent a friend request to " + user.username, category = 'success')
     return redirect("/search/" + search)
+
+@views.route('/request-friend-profile/<string:user_id>', methods = ['GET', 'POST'])
+@login_required
+def request_friend_profile(user_id):
+    user = User.query.get(user_id)
+
+    # if the user exists
+    if user:
+        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
+        db.session.add(new_request)
+        db.session.commit()
+        
+        flash("You have sent a friend request to " + user.username, category = 'success')
+    return redirect(url_for('views.chat'))
 
 @views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
