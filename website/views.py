@@ -1,35 +1,27 @@
-# Name of the project: LeeBRA Chat Application
-# Name of the module: views.py
-# Date of module creation: November 2021
-# Author of the module: Matthew Lee, Robert Bailey, Jonathan Rogers, Mikalai Asetski
-# Modification history: None
-# What the module does: store URL endpoints for the functioning of front end aspects of the website
-# List of functions: safe_picture(), profile(), other_profile(), add_friend() add_friend_profile()
-#   delete_message(), add_block(), remove_friend(), remove_block(), search() other_search()
-#   settings() chat(), chat_with()
-
-
-# imports
 import secrets
 import os
 import datetime
 from PIL import Image
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
+
 from sqlalchemy import and_, desc, or_
-from .models import User, Message, Friend, Block
+
+from .models import User, Message, Friend, Block, Request
 from . import db
 from .forms import UpdateAccountForm, SettingsForm
 
 views = Blueprint('views', __name__)
 
 
-# saves the picture in the profile
+# saves the picture
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(views.root_path, 'static/profile_pics', picture_fn)
+
     output_size = (125, 125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
@@ -38,7 +30,7 @@ def save_picture(form_picture):
     return picture_fn
 
 
-# URL for your profile page
+# your profile page
 @views.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -46,10 +38,12 @@ def profile():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
-            current_user.image_file = picture_file        
+            current_user.image_file = picture_file
+        
         current_user.username = form.username.data
         current_user.status = form.status.data
         db.session.commit()   #update database
+
         flash('Your account has been updated!', 'success')
         return redirect(url_for('views.profile'))
 
@@ -62,10 +56,10 @@ def profile():
     # grabs the image out of the profile pics folder
     image_file = url_for('static', filename = 'profile_pics/' + current_user.image_file)
     return render_template('profile.html', title = 'Account', image_file = image_file, form = form, 
-        user = current_user, User = User)
+        user = current_user, User = User, Request = Request)
 
 
-# URL for profile of a specific user
+# profile of a specific user
 @views.route('/profile/<string:username>', methods = ['GET', 'POST'])
 @login_required
 def other_profile(username):
@@ -73,9 +67,10 @@ def other_profile(username):
     
     if user:
         image_file = url_for('static', filename = 'profile_pics/' + user.image_file)  
-        # if method send data to the server
+
         if request.method == 'POST':
             user.username = request.form['username']
+
             try:
                 db.session.commit()   #update database
                 return redirect('/')
@@ -83,25 +78,60 @@ def other_profile(username):
                 return 'There was an issue updating your task'
 
         return render_template('other_profile.html', Friend = Friend, user = user, image_file = image_file, 
-            current_user = current_user, and_ = and_ , Block = Block)
+            current_user = current_user, and_ = and_ , Block = Block, Request = Request)
 
 
-# URL for the Adding Friend via search
-@views.route('/add-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
+# Code for the Add Friend button
+@views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
-def add_friend(user_id, search):
+def add_friend(user_id):
     user = User.query.get(user_id)
 
     # if the user exists
     if user:
         new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
+        user_friend = Friend(user_id = user.id, friend_id = current_user.id, friend_name = current_user.username)
+        old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
+        db.session.delete(old_request)
+        db.session.commit()
         db.session.add(new_friend)
-        db.session.commit()        
+        db.session.commit()
+        db.session.add(user_friend)
+        db.session.commit()
+        
+    
+        
         flash("You are now friends with " + user.username, category = 'success')
+    return redirect(url_for('views.profile'))
+
+@views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
+@login_required
+def request_friend(user_id, search):
+    user = User.query.get(user_id)
+
+    # if the user exists
+    if user:
+        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
+        db.session.add(new_request)
+        db.session.commit()
+        
+        flash("You have sent a friend request to " + user.username, category = 'success')
     return redirect("/search/" + search)
 
+@views.route('/request-friend-profile/<string:user_id>', methods = ['GET', 'POST'])
+@login_required
+def request_friend_profile(user_id):
+    user = User.query.get(user_id)
 
-# URL for adding friend 
+    # if the user exists
+    if user:
+        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
+        db.session.add(new_request)
+        db.session.commit()
+        
+        flash("You have sent a friend request to " + user.username, category = 'success')
+    return redirect(url_for('views.chat'))
+
 @views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
 def add_friend_profile(user_id):
@@ -117,7 +147,7 @@ def add_friend_profile(user_id):
     return redirect('/')
 
 
-# URL for Deletes messages one in time
+# Deletes messages
 @views.route('/delete-message/<string:message_id>/<string:recipient_name>', methods = ['GET', 'POST'])
 def delete_message(message_id, recipient_name):
     message = Message.query.get(message_id)
@@ -130,10 +160,11 @@ def delete_message(message_id, recipient_name):
     return redirect('/chat/' + recipient_name)
     
 
-# URL for blocking other user from communication
 @views.route('/add-block/<string:user_id>', methods=['GET', 'POST'])
 def add_block(user_id):
+
     user = User.query.get(user_id)
+
     new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
     old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
     db.session.add(new_block)
@@ -142,37 +173,55 @@ def add_block(user_id):
     if old_friend:
         db.session.delete(old_friend)
         db.session.commit()
+
+
     flash("You have blocked " + user.username, category='success')
 
     return redirect(url_for('views.chat'))
 
-
-# URL for removing other users from the block list
+# Code for unblock button
 @views.route('/remove-block/<string:user_id>', methods = ['GET', 'POST'])
 def remove_block(user_id):
+
     user = User.query.get(user_id)
+
     old_block = Block.query.filter(Block.user_id == current_user.id).first()
     db.session.delete(old_block)
-    db.session.commit()   
+    db.session.commit()
+    
     flash("You have unblocked " + user.username, category = 'success')
 
     return redirect(url_for('views.chat'))
 
+# Code for deny button
+@views.route('/deny-friend/<string:user_id>', methods = ['GET', 'POST'])
+def deny_friend(user_id):
 
-# URL for removing other users form the friend list
+    user = User.query.get(user_id)
+    old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
+    db.session.delete(old_request)
+    db.session.commit()
+    
+    flash("You have denied " + user.username, category = 'success')
+
+    return redirect(url_for('views.profile'))
+
 @views.route('/remove-friend/<string:user_id>', methods=['GET', 'POST'])
 def remove_friend(user_id):
+
     user = User.query.get(user_id)
+
     #new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
     old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
     db.session.delete(old_friend)
-    db.session.commit()    
+    db.session.commit()
+    
     flash("You have unfriended " + user.username, category='success')
 
     return redirect(url_for('views.chat'))
 
 
-# URL for search before the user inputs a query
+# search before the user inputs a query
 @views.route('/search', methods = ['GET', 'POST'])
 @login_required
 def search():
@@ -183,10 +232,10 @@ def search():
         return redirect("/search/" + search)
 
     return render_template("search.html", user = current_user, current_user = current_user, user_db = user_db, 
-        search = search, Friend = Friend, and_ = and_, Block = Block)
+        search = search, Friend = Friend, and_ = and_, Block = Block, Request = Request)
 
 
-# URL for search with query
+# search with query
 @views.route('/search/<string:search>', methods = ['GET', 'POST'])
 @login_required
 def other_search(search):
@@ -198,10 +247,10 @@ def other_search(search):
 
 
     return render_template("search.html", user = current_user, current_user = current_user, user_db = user_db, 
-        search = search, Friend = Friend, and_ = and_, Block = Block)
+        search = search, Friend = Friend, and_ = and_, Block = Block, Request = Request)
 
 
-# URL for settings page
+# settings page
 @views.route('/settings', methods = ['GET', 'POST'])
 @login_required
 def settings():
@@ -210,9 +259,12 @@ def settings():
         current_user.text_color = form.text_color.data
         current_user.text_size = form.text_size.data
         current_user.background = form.background.data
+
         db.session.commit()
+
         flash('Your settings were changed.', category = 'success')
         return redirect(url_for('views.settings'))
+
     
     elif request.method == 'GET':
         # fills out the forms based on your current settings
@@ -223,20 +275,20 @@ def settings():
     return render_template("settings.html", User = User, user = current_user, username = current_user.username, form = form)
 
 
-# URL for frequently asked questions page
+# frequently asked questions page
 @views.route('/faq', methods = ['GET', 'POST'])
 def faq():
     return render_template("faq.html", user = current_user)
 
 
-# URL for chat menu
+# chat menu
 @views.route('/', methods = ['GET', 'POST'])
 @login_required
 def chat():
     recipient = None    
     if request.method == 'POST':  #if button is pressed
         message = request.form.get('message')
-        # if message exist
+
         if len(message) < 1:
             flash('Message is too short.', category = 'error')
         else:
@@ -245,18 +297,20 @@ def chat():
             db.session.commit()  #update database
 
     # Get their username
+
     return render_template("chat_menu.html", User = User, user = current_user, username = current_user.username, 
         Message = Message, recipient = recipient, desc = desc, redirect = redirect, and_ = and_, or_ = or_, datetime = datetime)
 
 
-# URL for chat with a user selected
+# chat with a user selected
 @views.route('/chat/<string:recipient>', methods = ['GET', 'POST'])
 @login_required
 def chat_with(recipient):
     recipient = User.query.filter(User.username == recipient).first_or_404()
+
     if request.method == 'POST': #if button is pressed
         message = request.form.get('message')
-        # if message exist
+
         if len(message) < 1:
             flash('Message is too short.', category = 'error')
         else:

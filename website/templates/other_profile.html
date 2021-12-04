@@ -29,7 +29,13 @@
   
     <!-- if they're NOT your friend: -->
     {% else %}
-      <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/add-friend/{{user.id}}">Add Friend</a></div>
+      {% if not Request.query.filter(and_(Request.user_id == current_user.id, Request.receiver_id == user.id)).first() %}
+      {% if not Request.query.filter(and_(Request.user_id == user.id, Request.receiver_id == current_user.id)).first() %}
+      <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/request-friend-profile/{{user.id}}">Request</a></div>
+      {% else %}
+      <div style="padding-left:10px"><a a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/add-friend/{{user.id}}">Accept</a></div>
+      {% endif %}
+      {% endif %}
     {% endif %}
 
     <!-- if they ARE blocked -->
