@@ -90,8 +90,17 @@ def add_friend(user_id, search):
     # if the user exists
     if user:
         new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
+        user_friend = Friend(user_id = user.id, friend_id = current_user.id, friend_name = current_user.username)
+        old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
+
         db.session.add(new_friend)
         db.session.commit()
+        db.session.add(user_friend)
+        db.session.commit()
+        db.session.delete(old_request)
+        db.session.commit()
+        
+      
         
         flash("You are now friends with " + user.username, category = 'success')
     return redirect("/search/" + search)
@@ -168,6 +177,19 @@ def remove_block(user_id):
     db.session.commit()
     
     flash("You have unblocked " + user.username, category = 'success')
+
+    return redirect(url_for('views.chat'))
+
+# Code for deny button
+@views.route('/deny-friend/<string:user_id>', methods = ['GET', 'POST'])
+def deny_friend(user_id):
+
+    user = User.query.get(user_id)
+    old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
+    db.session.delete(old_request)
+    db.session.commit()
+    
+    flash("You have denied " + user.username, category = 'success')
 
     return redirect(url_for('views.chat'))
 

@@ -91,7 +91,8 @@
                 <li class="list-group-item" style="height: 70px">
                     <div style="float: left"><a href="/profile/{{sender.username}}"><img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + sender.image_file) }}"></a></div>
                     <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{sender.username}}">{{sender.username}}</a></div>
-                    
+                    <div style="padding-left:10px"><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/deny-friend/{{sender.id}}">Deny</a></div>
+                    <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/add-friend/{{sender.id}}">Add</a></div>
                 </li>
         {% endfor %}
     {% endif %}
