@@ -102,7 +102,7 @@ def add_friend(user_id):
     
         
         flash("You are now friends with " + user.username, category = 'success')
-    return redirect(url_for('views.chat'))
+    return redirect(url_for('views.profile'))
 
 @views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
 @login_required
@@ -204,7 +204,7 @@ def deny_friend(user_id):
     
     flash("You have denied " + user.username, category = 'success')
 
-    return redirect(url_for('views.chat'))
+    return redirect(url_for('views.profile'))
 
 @views.route('/remove-friend/<string:user_id>', methods=['GET', 'POST'])
 def remove_friend(user_id):
