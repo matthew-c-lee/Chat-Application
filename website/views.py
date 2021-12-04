@@ -187,19 +187,18 @@ def add_block(user_id):
     return redirect(url_for('views.chat'))
 
 # Code for unblock button
-@views.route('/remove-block/<string:user_id>', methods = ['GET', 'POST'])
+@views.route('/remove-block/<string:user_id>', methods=['GET', 'POST'])
 def remove_block(user_id):
 
     user = User.query.get(user_id)
 
-    old_block = Block.query.filter(Block.user_id == current_user.id).first()
+    old_block = Block.query.filter(Block.user_id == current_user.id, Block.blocked_id==user.id, Block.blocked_name==user.username).first()
     db.session.delete(old_block)
     db.session.commit()
     
-    flash("You have unblocked " + user.username, category = 'success')
+    flash("You have unblocked " + user.username, category='success')
 
     return redirect(url_for('views.chat'))
-
 # Code for deny button
 @views.route('/deny-friend/<string:user_id>', methods = ['GET', 'POST'])
 def deny_friend(user_id):
