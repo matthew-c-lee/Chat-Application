@@ -46,7 +46,6 @@ class User(db.Model, UserMixin):
     block_list = db.relationship('Block')
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20))
     groups = db.relationship('Group', secondary=user_groups, backref=db.backref('members', lazy='dynamic'))
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
 
