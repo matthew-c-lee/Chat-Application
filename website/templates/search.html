@@ -35,12 +35,16 @@
               <div style="float: left; width: 120px"><a class="btn btn-link" id="chat" href="/profile/{{search_user.username}}">{{search_user.username}}</a></div>
               {% if current_user != search_user %}
 
-                <!-- check that they're already your friend (if they are, no add button) -->
+                <!-- check that they're already your friend (if they are, no request button) -->
                 {% if not Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == search_user.id)).first() %}
                   <!-- "Add" button -->
+
+                  <!-- if they're not blocked -->
                   {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == search_user.id)).first() %}
-                  <div><a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/add-friend/{{search_user.id}}/{{search}}">Add</a></div>
-                  
+                    <!-- if you haven't sent them a friend request -->
+                    {% if not Request.query.filter(and_(Request.user_id == current_user.id, Request.receiver_id == search_user.id)).first() %}
+                      <div><a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/request-friend/{{search_user.id}}/{{search}}">Request</a></div>
+                    {% endif %}
                   {% else %}
                   <div><a style="float: right; padding-top: 6px" class="btn btn-outline-danger btn-sm" href="/remove-block/{{search_user.id}}">Unblock</a></div>
                   {% endif %} 

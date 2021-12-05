@@ -31,6 +31,12 @@ class Block(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
     blocked_id = db.Column(db.Integer)
     blocked_name = db.Column(db.String(10000))
+
+class Request(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) #one-to-many relationship
+    receiver_id = db.Column(db.Integer)
+    receiver_name = db.Column(db.String(10000))
     
 class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True)
@@ -44,6 +50,7 @@ class User(db.Model, UserMixin):
     messages = db.relationship('Message')
     friends_list = db.relationship('Friend')
     block_list = db.relationship('Block')
+    request_list = db.relationship('Request')
 
     id = db.Column(db.Integer, primary_key=True)
     groups = db.relationship('Group', secondary=user_groups, backref=db.backref('members', lazy='dynamic'))
