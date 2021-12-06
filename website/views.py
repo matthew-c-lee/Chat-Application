@@ -111,6 +111,7 @@ def add_friend(user_id):
     return redirect(url_for('views.profile'))
 
 
+# BUTTON CODE
 # After checking if the user exists, The selected user will be sent a Friend Request by adding the request's
 # information to the Request table.
 def send_friend_request(user_id):
@@ -123,7 +124,7 @@ def send_friend_request(user_id):
         
         flash("You have sent a friend request to " + user.username, category = 'success')
 
-
+# BUTTON CODE
 # This route will be activated upon the press of the 'Send Request' button in the search bar. It will run
 # the send_friend_request method, then redirect to search.
 @views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
@@ -133,6 +134,7 @@ def request_friend(user_id, search):
     return redirect("/search/" + search)
 
 
+# BUTTON CODE
 # This route will be activated upon the press of the 'Send Request' button anywhere on another user's 
 # profile. It will run the send_friend_request method, then redirect to the chat.
 @views.route('/request-friend-profile/<string:user_id>', methods = ['GET', 'POST'])
@@ -145,6 +147,7 @@ def request_friend_profile(user_id):
     return redirect('/profile/' + user.username)
 
 
+# BUTTON CODE
 # Deletes messages
 @views.route('/delete-message/<string:message_id>/<string:recipient_name>', methods = ['GET', 'POST'])
 def delete_message(message_id, recipient_name):
@@ -157,7 +160,8 @@ def delete_message(message_id, recipient_name):
 
     return redirect('/chat/' + recipient_name)
 
-    
+
+# BUTTON CODE
 # This route is used for the Block button. If the two users are friends, it will mutually unfriend them. It will
 # also add the user to your Block List.
 @views.route('/add-block/<string:user_id>', methods=['GET', 'POST'])
@@ -175,6 +179,7 @@ def add_block(user_id):
     return redirect('/profile/' + user.username)
 
 
+# METHOD
 # Searches for the corresponding Block record in the Block table and remove it.
 def remove_block(user_id):
     user = User.query.get(user_id)
@@ -186,6 +191,7 @@ def remove_block(user_id):
     flash("You have unblocked " + user.username, category='success')
 
 
+# BUTTON CODE
 # This route is for the Unblock button accessed via YOUR profile
 @views.route('/remove-block-profile/<string:user_id>', methods=['GET', 'POST'])
 def remove_block_profile(user_id):
@@ -193,6 +199,7 @@ def remove_block_profile(user_id):
     return redirect('/profile')
 
 
+# BUTTON CODE
 # This route is for the Unblock button accessed via the SELECTED USER'S profile 
 @views.route('/remove-block-their-profile/<string:user_id>', methods=['GET', 'POST'])
 def remove_block_their_profile(user_id):
@@ -202,7 +209,8 @@ def remove_block_their_profile(user_id):
     return redirect('/profile/' + user.username)
 
 
-# Code for deny button
+# BUTTON CODE
+# Deny any friend request
 @views.route('/deny-friend/<string:user_id>', methods = ['GET', 'POST'])
 def deny_friend(user_id):
 
@@ -230,6 +238,10 @@ def delete_friend(user_id):
         db.session.delete(their_friend_record)
         db.session.commit()
 
+
+# BUTTON CODE
+# This route is used for the Remove Friend button accessed via their profile. It runs delete_friend and
+# redirects the user back to the selected profile.
 @views.route('/remove-friend/<string:user_id>', methods=['GET', 'POST'])
 def remove_friend(user_id):
     delete_friend(user_id)

@@ -11,6 +11,9 @@ from .forms import UpdateGroupForm
 
 group_views = Blueprint('group_views', __name__)
 
+
+# This route will allow the user to input the name of a group. If it is a valid name, 
+# it will then be created and the CURRENT user will be added to it.
 @group_views.route('/create-group', methods=['GET', 'POST'])
 def create_group():
     if request.method == 'POST':
@@ -30,6 +33,8 @@ def create_group():
     return render_template("create_group.html", user=current_user)
 
 
+# This route will allow the user to edit their group name. If the name is valid, it will
+# change the group name.
 @group_views.route('/change-group-name/<string:group_id>', methods=['GET', 'POST'])
 def change_group_name(group_id):
     group = Group.query.filter(Group.group_id == group_id).first_or_404()
@@ -39,7 +44,7 @@ def change_group_name(group_id):
         group.group_name = form.group_name.data
 
         db.session.commit()
-        flash('Your group name has been changed!', 'success')
+        flash('Your group name has been changed!')
         return redirect('/')
     elif request.method == 'GET':
         form.group_name.data = group.group_name
