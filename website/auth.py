@@ -114,7 +114,7 @@ def sign_up():
 def forgot_password():
     if request.method == 'POST':
         username = request.form.get('username')
-        answer = request.form.get('security_answer')
+        answer = request.form.get('answer')
 
         user = User.query.filter_by(username=username).first()
                   
@@ -162,5 +162,4 @@ def password_reset():
             flash('Password was reset successfully.', category='success')
             return redirect(url_for('views.chat'))
 
-    return render_template("password_reset.html", user=current_user)   
-    
+    return render_template("password_reset.html", user=current_user) 
