@@ -110,51 +110,39 @@ def add_friend(user_id):
         flash("You are now friends with " + user.username, category = 'success')
     return redirect(url_for('views.profile'))
 
-# This route will be activated upon the press of the 'Send Request' button anywhere in the application.
-# The selected user will then be sent a Friend Request by adding the request's information to the Request
-# table.
+
+# After checking if the user exists, The selected user will be sent a Friend Request by adding the request's
+# information to the Request table.
+def send_friend_request(user_id):
+    user = User.query.get(user_id)
+    
+    if user:
+        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
+        db.session.add(new_request)
+        db.session.commit()
+        
+        flash("You have sent a friend request to " + user.username, category = 'success')
+
+
+# This route will be activated upon the press of the 'Send Request' button in the search bar. It will run
+# the send_friend_request method, then redirect to search.
 @views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
 @login_required
 def request_friend(user_id, search):
-    user = User.query.get(user_id)
-
-    # if the user exists
-    if user:
-        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
-        db.session.add(new_request)
-        db.session.commit()
-        
-        flash("You have sent a friend request to " + user.username, category = 'success')
+    send_friend_request(user_id)
     return redirect("/search/" + search)
 
-# This is   
+
+# This route will be activated upon the press of the 'Send Request' button anywhere on another user's 
+# profile. It will run the send_friend_request method, then redirect to the chat.
 @views.route('/request-friend-profile/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
 def request_friend_profile(user_id):
+    send_friend_request(user_id)
+
     user = User.query.get(user_id)
 
-    # if the user exists
-    if user:
-        new_request = Request(user_id = current_user.id, receiver_id = user.id, receiver_name = user.username)
-        db.session.add(new_request)
-        db.session.commit()
-        
-        flash("You have sent a friend request to " + user.username, category = 'success')
-    return redirect(url_for('views.chat'))
-
-@views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
-@login_required
-def add_friend_profile(user_id):
-    user = User.query.get(user_id)
-
-    # if the user exists
-    if user:
-        new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
-        db.session.add(new_friend)
-        db.session.commit()
-        
-        flash("You are now friends with " + user.username, category = 'success')
-    return redirect('/')
+    return redirect('/profile/' + user.username)
 
 
 # Deletes messages
@@ -168,78 +156,88 @@ def delete_message(message_id, recipient_name):
             db.session.commit()   #update database
 
     return redirect('/chat/' + recipient_name)
-    
 
+    
+# This route is used for the Block button. If the two users are friends, it will mutually unfriend them. It will
+# also add the user to your Block List.
 @views.route('/add-block/<string:user_id>', methods=['GET', 'POST'])
 def add_block(user_id):
-
     user = User.query.get(user_id)
+    delete_friend(user_id)
 
-    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id == user.id).first()
-    user_friend = Friend.query.filter(Friend.user_id == user_id, Friend.friend_id == current_user.id).first()
-
-    # old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
-
-    user = User.query.get(user_id)
-
+    # Block the user
     new_block = Block(user_id=current_user.id, blocked_id=user.id, blocked_name=user.username)
     db.session.add(new_block)
     db.session.commit()
 
-    if old_friend:
-        db.session.delete(old_friend)
-        db.session.delete(user_friend)
-        db.session.commit()
-
-
     flash("You have blocked " + user.username, category='success')
 
-    return redirect(url_for('views.chat'))
+    return redirect('/profile/' + user.username)
 
-# Code for unblock button
-@views.route('/remove-block/<string:user_id>', methods=['GET', 'POST'])
+
+# Searches for the corresponding Block record in the Block table and remove it.
 def remove_block(user_id):
-
     user = User.query.get(user_id)
 
-    old_block = Block.query.filter(Block.user_id == current_user.id, Block.blocked_id==user.id, Block.blocked_name==user.username).first()
-    db.session.delete(old_block)
+    # Find the Block record that needs to be removed
+    block_record = Block.query.filter(Block.user_id == current_user.id, Block.blocked_id==user.id, Block.blocked_name==user.username).first()
+    db.session.delete(block_record)
     db.session.commit()
-    
     flash("You have unblocked " + user.username, category='success')
 
-    return redirect(url_for('views.chat'))
+
+# This route is for the Unblock button accessed via YOUR profile
+@views.route('/remove-block-profile/<string:user_id>', methods=['GET', 'POST'])
+def remove_block_profile(user_id):
+    remove_block(user_id)    
+    return redirect('/profile')
+
+
+# This route is for the Unblock button accessed via the SELECTED USER'S profile 
+@views.route('/remove-block-their-profile/<string:user_id>', methods=['GET', 'POST'])
+def remove_block_their_profile(user_id):
+    remove_block(user_id)    
+
+    user = User.query.get(user_id)
+    return redirect('/profile/' + user.username)
+
+
 # Code for deny button
 @views.route('/deny-friend/<string:user_id>', methods = ['GET', 'POST'])
 def deny_friend(user_id):
 
     user = User.query.get(user_id)
-    old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id).first()
-    db.session.delete(old_request)
+    request_record = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id).first()
+    db.session.delete(request_record)
     db.session.commit()
     
     flash("You have denied " + user.username, category = 'success')
 
-    return redirect(url_for('views.profile'))
+    return redirect('/profile')
+
+def delete_friend(user_id):
+    user = User.query.get(user_id)
+
+    # Find friend record where the User ID is the CURRENT user's, and the Friend ID is the friend's
+    your_friend_record = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id == user.id).first()
+
+    # Find friend record where the User ID is the friend's, and the Friend ID is the CURRENT user's
+    their_friend_record = Friend.query.filter(Friend.user_id == user_id, Friend.friend_id == current_user.id).first()
+
+    # old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
+    if your_friend_record:
+        db.session.delete(your_friend_record)
+        db.session.delete(their_friend_record)
+        db.session.commit()
 
 @views.route('/remove-friend/<string:user_id>', methods=['GET', 'POST'])
 def remove_friend(user_id):
-
-    user = User.query.get(user_id)
-
-    old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id == user.id).first()
-    user_friend = Friend.query.filter(Friend.user_id == user_id, Friend.friend_id == current_user.id).first()
-
-
-    # old_friend = Friend.query.filter(Friend.user_id == current_user.id, Friend.friend_id==user.id, Friend.friend_name==user.username).first()
-    db.session.delete(old_friend)
-    db.session.delete(user_friend)
-
-    db.session.commit()
+    delete_friend(user_id)
     
+    user = User.query.get(user_id)
     flash("You have unfriended " + user.username, category='success')
 
-    return redirect(url_for('views.chat'))
+    return redirect('/profile/' + user.username)
 
 
 # This route brings up the basic search page before any queries are inputted. Upon a submission, this route will redirect
