@@ -67,6 +67,9 @@
             </div>
         </form>
     </div>
+    <br/>
+    <br/>
+
 
     <div style="width: 100%">
 
@@ -94,8 +97,8 @@
     <li style="height: 70px" class="list-group-item"><h4 style="padding-top:5px" align="center">Block List</h4></li>
     {% if current_user.block_list %}
         {% for blocked in current_user.block_list %}
-            <li class="list-group-item">
-                <div style="float: left"><a href="/profile/{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}"><img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == blocked.blocked_id).first_or_404().image_file) }}"></a></div>
+        <li class="list-group-item" style="height: 70px">
+            <div style="float: left"><a href="/profile/{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}"><img id='cornerpic' style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + User.query.filter(User.id == blocked.blocked_id).first_or_404().image_file) }}"></a></div>
                 <div style="float: left"><a class="btn btn-link" id="chat" href="/profile/{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}">{{User.query.filter(User.id == blocked.blocked_id).first_or_404().username}}</a></div>
                 <div align="right"><a class="btn btn-outline-danger btn-sm" href="/remove-block/{{blocked.blocked_id}}">Unblock</a></div>
 

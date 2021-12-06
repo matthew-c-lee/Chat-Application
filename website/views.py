@@ -91,7 +91,7 @@ def add_friend(user_id):
     if user:
         new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
         user_friend = Friend(user_id = user.id, friend_id = current_user.id, friend_name = current_user.username)
-        old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
+        old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id).first()
         db.session.delete(old_request)
         db.session.commit()
         db.session.add(new_friend)
@@ -204,7 +204,7 @@ def remove_block(user_id):
 def deny_friend(user_id):
 
     user = User.query.get(user_id)
-    old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id, Request.receiver_name==current_user.username).first()
+    old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id).first()
     db.session.delete(old_request)
     db.session.commit()
     
