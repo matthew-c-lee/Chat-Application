@@ -85,13 +85,6 @@
                     </div>
 
                     {% endif %}
-
-                
-                <!-- check that they're not already chatting with them -->
-                {% if friend.friend_id != recipient.id %}
-                    <!-- chat button -->
-                    <!-- <div align="right"><a class="btn btn-outline-success btn-sm" id="chat" href="/chat/{{friend_data.username}}">Chat</a></div> -->
-                {% endif %}
             </li>
         {% endfor %}
     {% endif %}

@@ -30,7 +30,8 @@ def save_picture(form_picture):
     return picture_fn
 
 
-# your profile page
+# This loads the CURRENT user's profile page using a form from the forms.py file. Using this, we validate
+# the form data to ensure no disallowed inputs are submitted.
 @views.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -59,7 +60,10 @@ def profile():
         user = current_user, User = User, Request = Request)
 
 
-# profile of a specific user
+# This loads the profile page for OTHER users. This shows the selected user's username, status, profile
+# picture, and the interactions you can have with the user (block, friend, unfriend, unblock depending on
+# their appearance in your lists or not. This page also includes the CURRENT user's incoming Friend Requests
+# and Block List, both of which they can interact with.
 @views.route('/profile/<string:username>', methods = ['GET', 'POST'])
 @login_required
 def other_profile(username):
@@ -81,7 +85,9 @@ def other_profile(username):
             current_user = current_user, and_ = and_ , Block = Block, Request = Request)
 
 
-# Code for the Add Friend button
+# This route will be activated upon the press of the 'Add Friend' button anywhere in the application. The button 
+# is only accessible if the other user has sent the CURRENT user a friend request. The users will then be added 
+# as mutual friends within the Friend table.
 @views.route('/add-friend/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
 def add_friend(user_id):
@@ -104,6 +110,9 @@ def add_friend(user_id):
         flash("You are now friends with " + user.username, category = 'success')
     return redirect(url_for('views.profile'))
 
+# This route will be activated upon the press of the 'Send Request' button anywhere in the application.
+# The selected user will then be sent a Friend Request by adding the request's information to the Request
+# table.
 @views.route('/request-friend/<string:user_id>/<string:search>', methods = ['GET', 'POST'])
 @login_required
 def request_friend(user_id, search):
@@ -118,6 +127,7 @@ def request_friend(user_id, search):
         flash("You have sent a friend request to " + user.username, category = 'success')
     return redirect("/search/" + search)
 
+# This is   
 @views.route('/request-friend-profile/<string:user_id>', methods = ['GET', 'POST'])
 @login_required
 def request_friend_profile(user_id):
@@ -232,7 +242,8 @@ def remove_friend(user_id):
     return redirect(url_for('views.chat'))
 
 
-# search before the user inputs a query
+# This route brings up the basic search page before any queries are inputted. Upon a submission, this route will redirect
+# the user to the other_search route.
 @views.route('/search', methods = ['GET', 'POST'])
 @login_required
 def search():
@@ -246,7 +257,9 @@ def search():
         search = search, Friend = Friend, and_ = and_, Block = Block, Request = Request)
 
 
-# search with query
+# This route is for user searches. It is accessible after the user has entered a query into the search bar.
+# It will use wildcards to limit the database to only those users with the search in their name, and send those
+# results to the user.
 @views.route('/search/<string:search>', methods = ['GET', 'POST'])
 @login_required
 def other_search(search):
@@ -261,7 +274,8 @@ def other_search(search):
         search = search, Friend = Friend, and_ = and_, Block = Block, Request = Request)
 
 
-# settings page
+# This route brings up the Settings Page. It will use a form from forms.py to autofill the forms with the user's
+# current settings. The code checks for a valid submission and updates the user's settings accordingly.
 @views.route('/settings', methods = ['GET', 'POST'])
 @login_required
 def settings():
@@ -286,34 +300,22 @@ def settings():
     return render_template("settings.html", User = User, user = current_user, username = current_user.username, form = form)
 
 
-# frequently asked questions page
+# This route brings up the Frequently Asked Questions page.
 @views.route('/faq', methods = ['GET', 'POST'])
 def faq():
     return render_template("faq.html", user = current_user)
 
 
-# chat menu
+# This route brings up the Chat Menu. 
 @views.route('/', methods = ['GET', 'POST'])
 @login_required
 def chat():
-    recipient = None    
-    if request.method == 'POST':  #if button is pressed
-        message = request.form.get('message')
-
-        if len(message) < 1:
-            flash('Message is too short.', category = 'error')
-        else:
-            new_message = Message(data = message, user_id = current_user.id)
-            db.session.add(new_message)
-            db.session.commit()  #update database
-
-    # Get their username
-
     return render_template("chat_menu.html", User = User, user = current_user, username = current_user.username, 
-        Message = Message, recipient = recipient, desc = desc, redirect = redirect, and_ = and_, or_ = or_, datetime = datetime)
+        Message = Message, desc = desc, redirect = redirect, and_ = and_, or_ = or_, datetime = datetime)
 
 
-# chat with a user selected
+# This route allows you to chat with a selected user. If a message is valid, it will
+# add it to the Message table.
 @views.route('/chat/<string:recipient>', methods = ['GET', 'POST'])
 @login_required
 def chat_with(recipient):
