@@ -14,17 +14,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
 
-
-
-
-    from .views import views
+    from .routes import routes
     from .auth import auth
-    from .group_views import group_views
+    from .group_routes import group_routes
 
 
-    app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(routes, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
-    app.register_blueprint(group_views, url_prefix='/')
+    app.register_blueprint(group_routes, url_prefix='/')
 
 
     from .models import User, Message

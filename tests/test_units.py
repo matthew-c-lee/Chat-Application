@@ -10,7 +10,7 @@ import unittest
 from unittest import TestCase
 from website.auth import *
 
-from website import views
+from website import routes
 
 def test_form_requirements():
     assert validate_sign_up('bad!username', 'badpw', 'badpw2', 'Good answer')[0] == False

@@ -30,24 +30,28 @@
                     min-height: 10em;
                     max-width: 550px;">
 
-      {% if user_db %}
-        {% for search_user in user_db %}
+      {% if search_list %}
+        {% for search_user in search_list %}
           <li style="height: 70px;" class="list-group-item">
               <!-- their profile picture -->
               <div style="float: left; padding-right: 10px"><a href="/profile/{{search_user.username}}"><img id="cornerpic" style="width:40px" class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + search_user.image_file) }}"></a></div>
 
               <!-- their name appears here -->
               <div style="float: left; width: 120px"><a class="btn btn-link" id="chat" href="/profile/{{search_user.username}}">{{search_user.username}}</a></div>
+              
+              <!-- if they are someone other than the CURRENT user -->
               {% if current_user != search_user %}
 
+                {% set friend = Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == search_user.id)).first() %}
+                {% set blocked = Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == search_user.id)).first() %}
+                {% set request = Request.query.filter(and_(Request.user_id == current_user.id, Request.receiver_id == search_user.id)).first() %}
+                
                 <!-- check that they're already your friend (if they are, no request button) -->
-                {% if not Friend.query.filter(and_(Friend.user_id == current_user.id, Friend.friend_id == search_user.id)).first() %}
-                  <!-- "Add" button -->
-
+                {% if not friend %}
                   <!-- if they're not blocked -->
-                  {% if not Block.query.filter(and_(Block.user_id == current_user.id, Block.blocked_id == search_user.id)).first() %}
+                  {% if not blocked %}
                     <!-- if you haven't sent them a friend request -->
-                    {% if not Request.query.filter(and_(Request.user_id == current_user.id, Request.receiver_id == search_user.id)).first() %}
+                    {% if not request %}
                       <div><a style="float: right; padding-top: 6px" class="btn btn-outline-success btn-sm" href="/request-friend/{{search_user.id}}/{{search}}">Request</a></div>
                     {% endif %}
                   {% else %}

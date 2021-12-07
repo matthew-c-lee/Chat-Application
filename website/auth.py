@@ -21,7 +21,7 @@ def login():
             if check_password_hash(user.password, password):
                 # flash('Logged in successfully.', category = 'success')
                 login_user(user, remember = True)
-                return redirect(url_for('views.chat'))
+                return redirect('/')
             else:
                 flash('Incorrect password.', category = 'error')
         else:
@@ -101,7 +101,7 @@ def sign_up():
             login_user(new_user, remember = True)
 
             flash('Account created.', category = 'success')
-            return redirect(url_for('views.chat'))
+            return redirect('/')
         else:
             if user:
                 message = 'Username taken.'
@@ -160,6 +160,6 @@ def password_reset():
             user.password=generate_password_hash(password1, method='sha256')
             db.session.commit()
             flash('Password was reset successfully.', category='success')
-            return redirect(url_for('views.chat'))
+            return redirect('/')
 
     return render_template("password_reset.html", user=current_user) 
