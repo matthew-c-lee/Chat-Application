@@ -92,19 +92,18 @@ def add_friend(user_id):
 
     # if the user exists
     if user:
+        # Friend record for the friend that requested you
         new_friend = Friend(user_id = current_user.id, friend_id = user.id, friend_name = user.username)
+        # Friend record for the you
         user_friend = Friend(user_id = user.id, friend_id = current_user.id, friend_name = current_user.username)
+        # The request to be deleted
         old_request = Request.query.filter(Request.user_id == user.id, Request.receiver_id==current_user.id).first()
         db.session.delete(old_request)
-        db.session.commit()
         db.session.add(new_friend)
-        db.session.commit()
         db.session.add(user_friend)
-        db.session.commit()
+        db.session.commit()  # Update Database
         
-    
-        
-        flash("You are now friends with " + user.username, category = 'success')
+        flash("You are now friends with " + user.username)
     return redirect('/profile')
 
 
