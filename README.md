@@ -1,5 +1,7 @@
 This was our final project for our Software Engineering class. This was created in a hurry, starting with almost no knowledge of Web Development, so expect some unorthodox methods inside this codebase!
 
+Demo: https://www.youtube.com/watch?v=zSRkpmQ3SuI
+
 # Chat-Application
  
 The LeeBRA Chat Application able to run through a web server with an address accessible through the internet. The system check authentication by checking if their username and passwords match the SQL user data, which stored in the web server. The system runs on Python code using the Flask Web Framework. Also using JavaScript and HTML for interactive web-pages that will update to user events, such as received messages, friend requests, etc.
